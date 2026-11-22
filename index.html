@@ -1,0 +1,3167 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="AI 作品館" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <title>AI 作品館 — HTML / Python / 網頁整合啟動器</title>
+  <style>
+    :root {
+      --bg: #f3f5f9;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --border: #e4e9f2;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --teach: #0f766e;
+      --teach-soft: #f0fdfa;
+      --teach-border: #99f6e4;
+      --html-bg: #eef2ff;
+      --html-text: #3730a3;
+      --py-bg: #ecfdf5;
+      --py-text: #065f46;
+      --web-bg: #f0f9ff;
+      --web-text: #0369a1;
+      --tag-bg: #f1f5f9;
+      --tag-text: #334155;
+      --amber-bg: #fffbeb;
+      --amber-text: #b45309;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 8px 22px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 44px rgba(15, 23, 42, 0.16);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0b1120;
+      --surface: #131c2e;
+      --surface-2: #1a263d;
+      --border: #233049;
+      --border-strong: #334566;
+      --text: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --primary-soft: rgba(59, 130, 246, 0.16);
+      --teach: #14b8a6;
+      --teach-soft: rgba(20, 184, 166, 0.16);
+      --teach-border: rgba(20, 184, 166, 0.35);
+      --html-bg: rgba(99, 102, 241, 0.2);
+      --html-text: #a5b4fc;
+      --py-bg: rgba(16, 185, 129, 0.2);
+      --py-text: #6ee7b7;
+      --web-bg: rgba(14, 165, 233, 0.2);
+      --web-text: #7dd3fc;
+      --tag-bg: rgba(148, 163, 184, 0.16);
+      --tag-text: #cbd5e1;
+      --amber-bg: rgba(245, 158, 11, 0.2);
+      --amber-text: #fcd34d;
+      --danger: #f87171;
+      --danger-soft: rgba(239, 68, 68, 0.16);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+      --shadow-lg: 0 20px 44px rgba(0, 0, 0, 0.55);
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.5;
+      min-height: 100%;
+      overflow-x: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    button, input, select, textarea { font-family: inherit; color: inherit; }
+
+    /* Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(243, 245, 249, 0.9);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme="dark"] .topbar { background: rgba(11, 17, 32, 0.9); }
+
+    body.classroom-mode .topbar {
+      border-bottom-color: var(--teach-border);
+    }
+
+    .topbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+      transition: background 0.2s ease;
+    }
+
+    body.classroom-mode .brand-icon {
+      background: linear-gradient(135deg, #0f766e, #0284c7);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
+    }
+
+    .brand-text { min-width: 0; }
+
+    .brand-title {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+
+    .count-pill {
+      font-size: 0.73rem;
+      font-weight: 700;
+      background: var(--primary-soft);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    body.classroom-mode .count-pill {
+      background: var(--teach-soft);
+      color: var(--teach);
+    }
+
+    .brand-sub {
+      margin: 1px 0 0;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .topbar-actions { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+
+    .classroom-btn {
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+    }
+
+    .classroom-btn:hover {
+      border-color: var(--teach);
+      color: var(--teach);
+    }
+
+    .classroom-btn.active {
+      background: var(--teach);
+      border-color: var(--teach);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(15, 118, 110, 0.28);
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .icon-btn:hover { border-color: var(--border-strong); color: var(--text); background: var(--surface-2); }
+    .icon-btn.active { border-color: var(--primary); background: var(--primary-soft); color: var(--primary); }
+
+    .btn-primary {
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 10px;
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+      transition: background-color 0.16s ease, transform 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-secondary {
+      height: 38px;
+      padding: 0 13px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover { border-color: var(--border-strong); background: var(--surface-2); }
+
+    .btn-danger {
+      height: 38px;
+      padding: 0 13px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: var(--danger);
+      color: #fff;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-danger:hover { opacity: 0.9; }
+
+    /* Container */
+    .container { max-width: 1140px; margin: 0 auto; padding: 16px 18px 80px; }
+
+    /* Classroom Mode Banner */
+    .classroom-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 11px 15px;
+      margin-bottom: 14px;
+      border-radius: var(--radius-md);
+      background: var(--teach-soft);
+      border: 1px solid var(--teach-border);
+      font-size: 0.84rem;
+      color: var(--text);
+      flex-wrap: wrap;
+    }
+
+    body.classroom-mode .classroom-banner { display: flex; }
+
+    .classroom-banner strong { color: var(--teach); }
+
+    /* Demo Banner */
+    .demo-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      border-radius: var(--radius-md);
+      background: var(--primary-soft);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+
+    .demo-banner strong { color: var(--primary); }
+
+    .demo-clear-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 5px 11px;
+      font-size: 0.77rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .demo-clear-btn:hover { border-color: var(--border-strong); }
+
+    /* Quick Strip */
+    .quick-section { margin-bottom: 15px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 7px; }
+    .section-label { font-size: 0.76rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.03em; text-transform: uppercase; }
+
+    .quick-strip { display: flex; gap: 9px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .quick-strip::-webkit-scrollbar { display: none; }
+
+    .quick-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 13px;
+      border-radius: 13px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.14s ease, border-color 0.14s ease;
+    }
+
+    .quick-chip:hover { transform: translateY(-1px); border-color: var(--primary); }
+    .quick-chip-icon { font-size: 1.2rem; line-height: 1; }
+    .quick-chip-text { text-align: left; }
+    .quick-chip-title { font-size: 0.83rem; font-weight: 700; color: var(--text); line-height: 1.2; }
+    .quick-chip-file { font-family: var(--mono); font-size: 0.69rem; color: var(--text-muted); }
+
+    /* Folder Bar */
+    .folder-bar { display: flex; align-items: center; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; }
+    .folder-bar::-webkit-scrollbar { display: none; }
+
+    .folder-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 12px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .folder-chip:hover { border-color: var(--border-strong); color: var(--text); }
+    .folder-chip.active { background: var(--primary); color: #ffffff; border-color: var(--primary); box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25); }
+    .folder-chip .f-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .folder-chip.active .f-dot { background: #ffffff !important; }
+    .folder-chip .f-num { font-size: 0.73rem; opacity: 0.78; }
+
+    .folder-add-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 12px;
+      border-radius: 11px;
+      border: 1.5px dashed var(--border-strong);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .folder-add-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+
+    /* Search & Filter Toolbar */
+    .toolbar { display: flex; flex-direction: column; gap: 9px; margin-bottom: 15px; }
+    .search-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .search-wrap { position: relative; flex: 1; min-width: 210px; }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+    .search-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 34px 0 36px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 0.89rem;
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+
+    .search-clear {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-clear.visible { display: inline-flex; }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 3px;
+      height: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .seg-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 0.79rem;
+      font-weight: 600;
+      padding: 0 11px;
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .seg-btn.active { background: var(--primary); color: #ffffff; }
+
+    .sort-select {
+      height: 40px;
+      padding: 0 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-size: 0.81rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* Quick Grade / Tag Filter Bar */
+    .tag-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+      scrollbar-width: none;
+    }
+
+    .tag-filter-row::-webkit-scrollbar { display: none; }
+
+    .tag-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.14s ease;
+    }
+
+    .tag-pill:hover { border-color: var(--teach); color: var(--teach); }
+    .tag-pill.active { background: var(--teach); color: #ffffff; border-color: var(--teach); }
+
+    /* Category Pills */
+    .cat-bar { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+    .cat-bar::-webkit-scrollbar { display: none; }
+
+    .cat-pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-secondary);
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cat-pill:hover { border-color: var(--border-strong); color: var(--text); }
+    .cat-pill.active { background: var(--text); color: var(--surface); border-color: var(--text); }
+    .cat-pill .pill-num { font-size: 0.71rem; opacity: 0.75; }
+
+    /* Batch Bar */
+    .batch-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      border: 1.5px solid var(--primary);
+      box-shadow: var(--shadow-sm);
+      flex-wrap: wrap;
+    }
+
+    .batch-bar.visible { display: flex; }
+    .batch-left { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-weight: 700; color: var(--primary); }
+    .batch-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    /* Grid & Cards */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .grid.list-view { grid-template-columns: 1fr; gap: 9px; }
+
+    .card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 15px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--accent, var(--primary));
+      opacity: 0.85;
+    }
+
+    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+    .card.selected-batch { border-color: var(--primary); background: var(--primary-soft); }
+
+    .card-top { display: flex; align-items: center; gap: 11px; }
+    .batch-check { width: 19px; height: 19px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+
+    .card-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+
+    .card-head { flex: 1; min-width: 0; }
+    .card-title-row { display: flex; align-items: center; gap: 6px; }
+    .card-title { margin: 0; font-size: 0.99rem; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .ver-chip {
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 5px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .demo-chip {
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 5px;
+      background: var(--amber-bg);
+      color: var(--amber-text);
+      flex-shrink: 0;
+    }
+
+    .card-filename-row { margin-top: -1px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    .filename-badge {
+      display: inline-flex;
+      align-items: center;
+      max-width: 100%;
+      padding: 3px 9px;
+      border-radius: 7px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      word-break: break-all;
+      line-height: 1.35;
+    }
+
+    .card-tags-line {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .quick-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--teach-soft);
+      color: var(--teach);
+      border: 1px solid var(--teach-border);
+    }
+
+    .card-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+
+    .mini-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .mini-btn:hover { background: var(--surface-2); color: var(--text); }
+    .mini-btn.fav-active { color: #f59e0b; }
+
+    .card-note {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      margin-top: auto;
+      padding-top: 9px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-tags { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; min-width: 0; }
+    .type-badge { font-family: var(--mono); font-size: 0.69rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+    .type-html { background: var(--html-bg); color: var(--html-text); }
+    .type-py { background: var(--py-bg); color: var(--py-text); }
+    .type-web { background: var(--web-bg); color: var(--web-text); }
+    .cat-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); background: var(--surface-2); padding: 2px 7px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
+    .open-hint { font-size: 0.76rem; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; }
+
+    /* Compact List View */
+    .grid.list-view .card { flex-direction: row; align-items: center; padding: 11px 14px; gap: 12px; }
+    .grid.list-view .card-top { flex: 1; min-width: 0; }
+    .grid.list-view .card-avatar { width: 38px; height: 38px; font-size: 1.2rem; }
+    .grid.list-view .card-filename-row { margin-top: 0; flex-shrink: 0; }
+    .grid.list-view .card-note, .grid.list-view .open-hint, .grid.list-view .card-tags-line { display: none; }
+    .grid.list-view .card-footer { margin-top: 0; padding-top: 0; border-top: none; flex-shrink: 0; }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 46px 20px;
+      background: var(--surface);
+      border: 1.5px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      max-width: 520px;
+      margin: 20px auto;
+    }
+
+    .empty-icon { font-size: 2.3rem; margin-bottom: 8px; }
+    .empty-state h2 { margin: 0 0 6px; font-size: 1.06rem; }
+    .empty-state p { margin: 0 0 16px; font-size: 0.85rem; color: var(--text-muted); }
+    .empty-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+    /* Drag & Drop */
+    .drop-overlay { position: fixed; inset: 0; z-index: 90; background: rgba(37, 99, 235, 0.14); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; padding: 24px; }
+    .drop-overlay.visible { display: flex; }
+    .drop-box { background: var(--surface); border: 2.5px dashed var(--primary); border-radius: 20px; padding: 36px 40px; text-align: center; box-shadow: var(--shadow-lg); }
+
+    /* Modals */
+    .modal-backdrop { position: fixed; inset: 0; z-index: 60; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 580px;
+      max-height: 90vh;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalIn 0.18s ease;
+    }
+
+    @keyframes modalIn { from { opacity: 0; transform: translateY(10px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .modal-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .modal-header h3 { margin: 0; font-size: 1rem; font-weight: 700; }
+    .modal-body { padding: 16px 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 13px; }
+    .modal-footer { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: flex-end; gap: 10px; background: var(--surface-2); }
+
+    .modal-tabs { display: flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 11px; padding: 3px; gap: 4px; }
+    .modal-tab { flex: 1; border: none; background: transparent; padding: 8px 10px; border-radius: 8px; font-size: 0.83rem; font-weight: 700; color: var(--text-secondary); cursor: pointer; }
+    .modal-tab.active { background: var(--surface); color: var(--primary); box-shadow: var(--shadow-sm); }
+
+    .classify-box { padding: 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+    .classify-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+    .classify-row label { font-size: 0.81rem; font-weight: 700; color: var(--text-secondary); }
+    .manual-fields { display: none; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .manual-fields.visible { display: grid; }
+
+    .picker-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .picker-card {
+      border: 1.5px dashed var(--border-strong);
+      border-radius: 14px;
+      padding: 15px 12px;
+      background: var(--surface-2);
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .picker-card:hover { border-color: var(--primary); background: var(--primary-soft); }
+    .picker-card .pk-icon { font-size: 1.5rem; }
+    .picker-card .pk-title { font-size: 0.89rem; font-weight: 700; color: var(--text); }
+    .picker-card .pk-desc { font-size: 0.73rem; color: var(--text-muted); line-height: 1.35; }
+
+    .staged-wrap { display: none; flex-direction: column; gap: 10px; }
+    .staged-wrap.visible { display: flex; }
+    .staged-bar { display: flex; align-items: center; justify-content: space-between; font-size: 0.81rem; color: var(--text-secondary); }
+    .staged-list { max-height: 210px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; }
+    .staged-item { display: flex; align-items: center; gap: 9px; padding: 9px 11px; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+    .staged-item:last-child { border-bottom: none; }
+    .staged-item input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+    .staged-info { flex: 1; min-width: 0; }
+    .staged-name { font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .staged-file { font-family: var(--mono); font-size: 0.71rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .staged-selects { display: flex; gap: 5px; flex-shrink: 0; }
+    .staged-cat { font-size: 0.71rem; padding: 3px 6px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); max-width: 95px; }
+
+    /* Form Controls */
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
+    .field input[type="text"], .field input[type="url"], .field input[type="password"], .field select, .field textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      font-size: 0.87rem;
+      outline: none;
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); background: var(--surface); }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: var(--teach-soft);
+      border: 1px solid var(--teach-border);
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .check-row input { width: 17px; height: 17px; accent-color: var(--teach); }
+
+    .preset-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .preset-tag-btn {
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text-secondary);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .preset-tag-btn.active { background: var(--teach); color: #fff; border-color: var(--teach); }
+
+    .emoji-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .emoji-opt { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); font-size: 1.1rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+    .emoji-opt.selected { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 2px var(--primary-soft); }
+    .color-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .color-dot { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; }
+    .color-dot.selected { transform: scale(1.15); border-color: var(--text); }
+
+    /* Version History Timeline */
+    .history-box {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 165px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 0.79rem;
+      padding-bottom: 7px;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .history-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .history-date { font-family: var(--mono); font-size: 0.71rem; color: var(--text-muted); }
+
+    .folder-mgr-list { display: flex; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; }
+    .folder-mgr-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); font-size: 0.85rem; }
+
+    /* Cloud Sync Box */
+    .sync-box {
+      padding: 13px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .sync-status {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+    }
+
+    /* Fullscreen Overlays */
+    .viewer-overlay { position: fixed; inset: 0; z-index: 80; background: var(--bg); display: none; flex-direction: column; }
+    .viewer-overlay.open { display: flex; }
+    .viewer-bar { height: 52px; padding: 0 12px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-shrink: 0; }
+    .viewer-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .back-btn { height: 34px; padding: 0 11px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 0.83rem; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; cursor: pointer; flex-shrink: 0; }
+    .viewer-meta { min-width: 0; }
+    .viewer-title { font-size: 0.9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .viewer-file { font-family: var(--mono); font-size: 0.71rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .viewer-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+    .viewer-frame { flex: 1; width: 100%; border: none; background: #ffffff; }
+    .py-viewer-body { flex: 1; overflow: auto; padding: 18px; max-width: 960px; width: 100%; margin: 0 auto; }
+    .py-meta-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; font-size: 0.8rem; color: var(--text-muted); }
+    .py-code-box { background: #0f172a; color: #e2e8f0; border-radius: 14px; padding: 16px; overflow-x: auto; font-family: var(--mono); font-size: 0.83rem; line-height: 1.6; white-space: pre; tab-size: 4; border: 1px solid #1e293b; }
+
+    .setting-card { padding: 12px 13px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .setting-text h4 { margin: 0 0 2px; font-size: 0.88rem; }
+    .setting-text p { margin: 0; font-size: 0.76rem; color: var(--text-muted); }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    [data-theme="dark"] .toast { background: #f8fafc; color: #0f172a; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 680px) {
+      .topbar-inner { padding: 11px 12px; }
+      .brand-sub, .hide-mobile { display: none; }
+      .container { padding: 13px 13px 64px; }
+      .picker-grid, .form-2col, .manual-fields { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .grid.list-view .card { flex-direction: column; align-items: stretch; }
+      .viewer-actions .hide-sm { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-title">
+            <span id="brandNameText">AI 作品館</span>
+            <span class="count-pill" id="totalCountBadge">0</span>
+          </h1>
+          <p class="brand-sub">整合 .html、.py 與常用網頁・課堂模式・版本紀錄與跨裝置同步</p>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="classroom-btn" id="classroomToggleBtn" title="一鍵切換課堂模式，隱藏私人遊戲">
+          <span>🎓</span>
+          <span class="hide-mobile" id="classroomBtnLabel">課堂模式</span>
+        </button>
+        <button class="icon-btn" id="viewModeBtn" title="切換卡片／精簡清單" aria-label="切換檢視模式">
+          <svg id="viewGridIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"></line>
+            <line x1="8" y1="12" x2="21" y2="12"></line>
+            <line x1="8" y1="18" x2="21" y2="18"></line>
+            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+          </svg>
+          <svg id="viewListIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </button>
+        <button class="icon-btn" id="batchToggleBtn" title="批次整理與搬移資料夾" aria-label="批次整理">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"></polyline>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="themeToggleBtn" title="切換深淺色模式" aria-label="切換深淺色模式">
+          <svg id="themeIconSun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg id="themeIconMoon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="icon-btn" id="settingsBtn" title="雲端同步、備份與資料夾管理" aria-label="備份與同步">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <button class="btn-primary" id="openImportBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          加入作品
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="container">
+    <!-- Classroom Mode Active Banner -->
+    <div class="classroom-banner" id="classroomBanner">
+      <span>🎓 <strong>課堂模式已開啟</strong> — 目前只顯示教學專用平台與年級課題作品，已自動隱藏私人遊戲。</span>
+      <button type="button" class="demo-clear-btn" id="exitClassroomBtn">退出課堂模式</button>
+    </div>
+
+    <!-- Demo Notice Banner -->
+    <div class="demo-banner" id="demoBanner" style="display:none;">
+      <span>目前包含 <strong>示範項目</strong>，點擊即可體驗開啟效果與課堂模式切換；匯入你的作品後可隨時一鍵清除。</span>
+      <button class="demo-clear-btn" id="clearDemoBtn">清除示範</button>
+    </div>
+
+    <!-- Pinned Quick Launch Strip -->
+    <section class="quick-section" id="quickSection" style="display:none;">
+      <div class="section-head">
+        <span class="section-label">★ 常用快速啟動</span>
+      </div>
+      <div class="quick-strip" id="quickStrip"></div>
+    </section>
+
+    <!-- Folder Navigation Bar -->
+    <section id="folderSection" aria-label="資料夾分類">
+      <div class="section-head">
+        <span class="section-label">📁 資料夾 (Folders)</span>
+      </div>
+      <div class="folder-bar" id="folderBar"></div>
+    </section>
+
+    <!-- Search & Filter Toolbar -->
+    <section class="toolbar" aria-label="搜尋與篩選">
+      <div class="search-row">
+        <div class="search-wrap">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" class="search-input" id="searchInput" placeholder="搜尋作品名、.html / .py 檔名、年級標籤 (如 F.5) 或備註..." autocomplete="off" />
+          <button class="search-clear" id="searchClearBtn" aria-label="清除搜尋">✕</button>
+        </div>
+
+        <div class="segmented" role="group" aria-label="類型篩選">
+          <button class="seg-btn active" data-type="all">全部</button>
+          <button class="seg-btn" data-type="html">.HTML</button>
+          <button class="seg-btn" data-type="py">.PY</button>
+          <button class="seg-btn" data-type="web">網頁</button>
+        </div>
+
+        <select class="sort-select" id="sortSelect" aria-label="排序方式">
+          <option value="recent">最近使用</option>
+          <option value="newest">最新更新</option>
+          <option value="name">檔名 A–Z</option>
+        </select>
+      </div>
+
+      <!-- Quick Grade / Topic Tags -->
+      <div class="tag-filter-row" id="quickTagBar" aria-label="年級與課題快捷標籤"></div>
+
+      <!-- Category Pills -->
+      <div class="cat-bar" id="categoryBar" role="tablist" aria-label="主題標籤篩選"></div>
+    </section>
+
+    <!-- Batch Organize Bar -->
+    <div class="batch-bar" id="batchBar">
+      <div class="batch-left">
+        <span id="batchCountText">已選取 0 個作品</span>
+        <button type="button" class="demo-clear-btn" id="batchSelectAllBtn">全選目前清單</button>
+      </div>
+      <div class="batch-controls">
+        <select class="sort-select" id="batchFolderSelect" style="height:34px;"></select>
+        <button type="button" class="btn-secondary" id="batchMoveBtn" style="height:34px; padding:0 12px;">移至資料夾</button>
+        <button type="button" class="btn-danger" id="batchDeleteBtn" style="height:34px; padding:0 12px;">刪除所選</button>
+        <button type="button" class="btn-secondary" id="batchCancelBtn" style="height:34px; padding:0 12px;">完成</button>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <section class="grid" id="cardsGrid" aria-live="polite"></section>
+
+    <!-- Empty State -->
+    <section class="empty-state" id="emptyState" style="display:none;">
+      <div class="empty-icon">📂</div>
+      <h2 id="emptyTitle">未有符合條件的作品</h2>
+      <p id="emptyDesc">按右上角「加入作品」，即可匯入 .html、.py 檔案或新增常用網頁連結。</p>
+      <div class="empty-actions" id="emptyActions">
+        <button class="btn-primary" id="emptyAddBtn">+ 加入作品</button>
+        <button class="btn-secondary" id="emptyResetBtn" style="display:none;">重設篩選</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Drag & Drop Overlay -->
+  <div class="drop-overlay" id="dropOverlay">
+    <div class="drop-box">
+      <div style="font-size:2.4rem;">📥</div>
+      <h3>放開以篩選並加入檔案</h3>
+      <p>系統會自動篩選出 .html、.htm 及 .py 檔案並建議分類與版本更新</p>
+    </div>
+  </div>
+
+  <!-- Hidden Inputs -->
+  <input type="file" id="filePickerInput" multiple accept=".html,.htm,.py,text/html,text/x-python" style="display:none;" />
+  <input type="file" id="folderPickerInput" webkitdirectory directory multiple style="display:none;" />
+  <input type="file" id="backupImportInput" accept=".json,application/json" style="display:none;" />
+
+  <!-- Import / Add Modal -->
+  <div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="importModalTitle">加入作品（.html / .py / 網頁）</h3>
+        <button class="mini-btn" id="closeImportBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-tabs" role="tablist">
+          <button type="button" class="modal-tab active" data-import-tab="files">📄 匯入 .html / .py 檔案</button>
+          <button type="button" class="modal-tab" data-import-tab="web">🌐 新增網頁連結</button>
+        </div>
+
+        <!-- Tab 1: Files -->
+        <div id="importTabFiles" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="classify-box">
+            <div class="classify-row">
+              <label>分類方式</label>
+              <div class="segmented" style="height:34px;">
+                <button type="button" class="seg-btn active" data-classify="auto">✨ 智能建議分類</button>
+                <button type="button" class="seg-btn" data-classify="manual">✋ 手動統一分類</button>
+              </div>
+            </div>
+            <div class="manual-fields" id="manualClassifyFields">
+              <div class="field">
+                <label for="manualFolderSelect">指定資料夾</label>
+                <select id="manualFolderSelect"></select>
+              </div>
+              <div class="field">
+                <label for="manualCatSelect">指定主題標籤</label>
+                <select id="manualCatSelect"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="picker-grid">
+            <button type="button" class="picker-card" id="pickFilesBtn">
+              <span class="pk-icon">📄</span>
+              <span class="pk-title">選取多個檔案</span>
+              <span class="pk-desc">適合手機瀏覽器，一次多選 .html 或 .py 檔</span>
+            </button>
+            <button type="button" class="picker-card" id="pickFolderBtn">
+              <span class="pk-icon">📁</span>
+              <span class="pk-title">掃描整個資料夾</span>
+              <span class="pk-desc">自動從路徑篩選出所有 .html 及 .py 檔</span>
+            </button>
+          </div>
+
+          <div class="staged-wrap" id="stagedWrap">
+            <div class="staged-bar">
+              <span id="stagedSummary">已篩選出 0 個檔案</span>
+              <button type="button" class="demo-clear-btn" id="toggleAllStagedBtn">全選 / 取消</button>
+            </div>
+            <div class="staged-list" id="stagedList"></div>
+            <div class="field" id="updateNoteFieldWrap" style="display:none;">
+              <label for="importUpdateNoteInput">版本更新備註（會自動寫入同名檔案的更新紀錄）</label>
+              <input type="text" id="importUpdateNoteInput" placeholder="例如：修正手機排版、新增雙語切換按鈕" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Web URL -->
+        <div id="importTabWeb" style="display:none; flex-direction:column; gap:11px;">
+          <div class="field">
+            <label for="webUrlInput">網頁網址 (URL)</label>
+            <input type="url" id="webUrlInput" placeholder="https://your-site.netlify.app/ 或常用 AI 網頁" />
+          </div>
+          <div class="field">
+            <label for="webTitleInput">作品名稱</label>
+            <input type="text" id="webTitleInput" placeholder="例如：F.5 電解互動平台（線上版）" />
+          </div>
+          <div class="form-2col">
+            <div class="field">
+              <label for="webFolderSelect">所屬資料夾</label>
+              <select id="webFolderSelect"></select>
+            </div>
+            <div class="field">
+              <label for="webCatSelect">主題標籤</label>
+              <select id="webCatSelect"></select>
+            </div>
+          </div>
+          <div class="form-2col">
+            <div class="field">
+              <label for="webOpenModeSelect">開啟方式</label>
+              <select id="webOpenModeSelect">
+                <option value="newtab">新分頁開啟（最穩定）</option>
+                <option value="embed">內嵌視窗開啟</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="webTagsInput">年級／課題標籤（逗號分隔）</label>
+              <input type="text" id="webTagsInput" placeholder="例如：F.5, 電解, HKDSE" />
+            </div>
+          </div>
+          <label class="check-row">
+            <input type="checkbox" id="webTeachingCheck" />
+            <span>🎓 標記為課堂教學用（在課堂模式下顯示）</span>
+          </label>
+          <div class="field">
+            <label for="webNoteInput">簡短備註（選填）</label>
+            <input type="text" id="webNoteInput" placeholder="例如：課堂投影示範用" />
+          </div>
+          <div class="field">
+            <label>代表性圖示</label>
+            <div class="emoji-row" id="webEmojiPicker"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelImportBtn">取消</button>
+        <button type="button" class="btn-primary" id="confirmImportBtn" disabled>確認加入 (0)</button>
+        <button type="button" class="btn-primary" id="confirmWebBtn" style="display:none;">加入網頁</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create / Manage Folder Modal -->
+  <div class="modal-backdrop" id="folderModal" role="dialog" aria-modal="true" aria-labelledby="folderModalTitle">
+    <div class="modal" style="max-width:460px;">
+      <div class="modal-header">
+        <h3 id="folderModalTitle">新增或管理資料夾</h3>
+        <button class="mini-btn" id="closeFolderModalBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="newFolderNameInput">新資料夾名稱</label>
+          <input type="text" id="newFolderNameInput" placeholder="例如：F.5 化學互動、親子桌遊、日常工具" />
+        </div>
+        <div class="field">
+          <label>選擇資料夾圖示</label>
+          <div class="emoji-row" id="folderEmojiPicker"></div>
+        </div>
+        <div class="field">
+          <label>選擇代表色</label>
+          <div class="color-row" id="folderColorPicker"></div>
+        </div>
+        <button type="button" class="btn-primary" id="createFolderSubmitBtn" style="width:100%;">+ 建立資料夾</button>
+
+        <div class="field" style="margin-top:6px;">
+          <label>現有資料夾</label>
+          <div class="folder-mgr-list" id="folderMgrList"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="doneFolderModalBtn">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Item + Version History Modal -->
+  <div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="editModalTitle">整理作品與版本紀錄</h3>
+        <button class="mini-btn" id="closeEditBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label id="editFilenameLabel">原始檔名（固定顯示於卡片上）</label>
+          <div class="filename-badge" id="editFilenamePreview">example.html</div>
+        </div>
+        <div class="form-2col">
+          <div class="field">
+            <label for="editTitleInput">顯示名稱</label>
+            <input type="text" id="editTitleInput" placeholder="例如：鬥獸棋、電解互動平台" />
+          </div>
+          <div class="field">
+            <label for="editVersionInput">目前版本號</label>
+            <input type="text" id="editVersionInput" placeholder="例如：v1.0" />
+          </div>
+        </div>
+        <div class="form-2col">
+          <div class="field">
+            <label for="editFolderSelect">所屬資料夾</label>
+            <select id="editFolderSelect"></select>
+          </div>
+          <div class="field">
+            <label for="editCategorySelect">主題標籤</label>
+            <select id="editCategorySelect"></select>
+          </div>
+        </div>
+
+        <label class="check-row">
+          <input type="checkbox" id="editTeachingCheck" />
+          <span>🎓 課堂教學專用（開啟「課堂模式」時顯示此作品）</span>
+        </label>
+
+        <div class="field">
+          <label>快捷年級標籤（點選切換）</label>
+          <div class="preset-tags" id="editPresetGradeTags"></div>
+        </div>
+
+        <div class="field">
+          <label for="editCustomTagsInput">課題／自訂標籤（以逗號分隔）</label>
+          <input type="text" id="editCustomTagsInput" placeholder="例如：電解, Redox, 酸鹼, HKDSE" />
+        </div>
+
+        <div class="field">
+          <label>代表性圖示</label>
+          <div class="emoji-row" id="emojiPicker"></div>
+        </div>
+
+        <div class="field">
+          <label for="editNoteInput">簡短備註（選填）</label>
+          <textarea id="editNoteInput" rows="2" placeholder="例如：F.5 電解教學用、同仔仔玩"></textarea>
+        </div>
+
+        <!-- Version History -->
+        <div class="field">
+          <label>版本更新紀錄</label>
+          <div class="history-box" id="editHistoryList"></div>
+          <div style="display:flex; gap:8px; margin-top:4px;">
+            <input type="text" id="newChangelogInput" placeholder="新增一筆更新說明（例如：調整字體大小）" style="flex:1;" />
+            <button type="button" class="btn-secondary" id="addChangelogBtn" style="height:36px;">+ 記錄</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn-danger" id="deleteFromEditBtn">刪除作品</button>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-secondary" id="cancelEditBtn">取消</button>
+          <button type="button" class="btn-primary" id="saveEditBtn">儲存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Modal -->
+  <div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 id="confirmTitle">確認操作</h3>
+        <button class="mini-btn" id="closeConfirmBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="confirmMessage" style="margin:0; font-size:0.9rem; color:var(--text-secondary);"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelConfirmBtn">取消</button>
+        <button type="button" class="btn-danger" id="okConfirmBtn">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings / Backup / Cloud Sync Modal -->
+  <div class="modal-backdrop" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="settingsModalTitle">跨裝置同步、備份與管理</h3>
+        <button class="mini-btn" id="closeSettingsBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Manual JSON Backup -->
+        <div class="setting-card">
+          <div class="setting-text">
+            <h4>手動跨裝置備份 (.json)</h4>
+            <p>支援 Samsung、iOS、iPadOS、電腦手動匯出與還原（含檔案、資料夾與版本紀錄）。</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn-secondary" id="exportBackupBtn">匯出備份</button>
+            <button type="button" class="btn-secondary" id="importBackupBtn">還原備份</button>
+          </div>
+        </div>
+
+        <!-- GitHub Gist Cloud Sync -->
+        <div class="sync-box">
+          <div class="setting-text">
+            <h4>☁️ GitHub Gist 跨裝置雲端同步（選用）</h4>
+            <p>填入 GitHub Personal Access Token（僅需勾選 <code>gist</code> 權限），即可在手機、平板與電腦一鍵同步。</p>
+          </div>
+          <div class="form-2col">
+            <div class="field">
+              <label for="syncTokenInput">GitHub Token（只存本機）</label>
+              <input type="password" id="syncTokenInput" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="syncGistIdInput">Gist ID（首次上傳自動建立）</label>
+              <input type="text" id="syncGistIdInput" placeholder="留空會自動建立私人 Gist" autocomplete="off" />
+            </div>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button type="button" class="btn-primary" id="syncPushBtn" style="height:35px;">☁️ 上傳至雲端</button>
+            <button type="button" class="btn-secondary" id="syncPullBtn" style="height:35px;">⬇️ 從雲端合併還原</button>
+            <span class="sync-status" id="syncStatusText">尚未同步</span>
+          </div>
+        </div>
+
+        <div class="setting-card">
+          <div class="setting-text">
+            <h4>管理自訂資料夾</h4>
+            <p>新增、檢視或刪除資料夾，讓大量作品井井有條。</p>
+          </div>
+          <button type="button" class="btn-secondary" id="openFolderMgrFromSettingsBtn">管理資料夾</button>
+        </div>
+
+        <div class="setting-card">
+          <div class="setting-text">
+            <h4>載入示範作品</h4>
+            <p>重新加入示範項目（含 F.4/F.5/F.6 教學作品與私人遊戲範例）。</p>
+          </div>
+          <button type="button" class="btn-secondary" id="restoreDemoBtn">載入示範</button>
+        </div>
+
+        <div class="setting-card">
+          <div class="setting-text">
+            <h4>清空全部作品</h4>
+            <p>移除此裝置內儲存的所有項目（不會刪除手機原資料夾的檔案）。</p>
+          </div>
+          <button type="button" class="btn-danger" id="clearAllBtn">全部清空</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary" id="doneSettingsBtn">完成</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen HTML / Web Runner Overlay -->
+  <div class="viewer-overlay" id="htmlRunnerOverlay" aria-hidden="true">
+    <div class="viewer-bar">
+      <div class="viewer-left">
+        <button class="back-btn" id="closeHtmlRunnerBtn">← 返回作品館</button>
+        <div class="viewer-meta">
+          <div class="viewer-title" id="runnerTitle">作品名稱</div>
+          <div class="viewer-file" id="runnerFilename">filename.html</div>
+        </div>
+      </div>
+      <div class="viewer-actions">
+        <button class="btn-secondary" id="openNewTabBtn" style="height:34px; padding:0 11px; font-size:0.8rem;">
+          <span class="hide-sm">新分頁開啟</span> ↗
+        </button>
+      </div>
+    </div>
+    <iframe class="viewer-frame" id="runnerIframe" title="HTML 作品預覽"></iframe>
+  </div>
+
+  <!-- Fullscreen Python Code Viewer Overlay -->
+  <div class="viewer-overlay" id="pyViewerOverlay" aria-hidden="true">
+    <div class="viewer-bar">
+      <div class="viewer-left">
+        <button class="back-btn" id="closePyViewerBtn">← 返回作品館</button>
+        <div class="viewer-meta">
+          <div class="viewer-title" id="pyViewerTitle">Python 程式</div>
+          <div class="viewer-file" id="pyViewerFilename">script.py</div>
+        </div>
+      </div>
+      <div class="viewer-actions">
+        <button class="btn-secondary" id="copyPyBtn" style="height:34px; padding:0 11px; font-size:0.8rem;">複製程式碼</button>
+        <button class="btn-primary" id="downloadPyBtn" style="height:34px; padding:0 11px; font-size:0.8rem;">下載 .py</button>
+      </div>
+    </div>
+    <div class="py-viewer-body">
+      <div class="py-meta-strip" id="pyMetaStrip"></div>
+      <pre class="py-code-box" id="pyCodeContent"></pre>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const DB_NAME = 'ai_works_hub_db_v3';
+      const STORE_WORKS = 'works';
+      const STORE_FOLDERS = 'folders';
+      const CATEGORIES = ['化學教學', '親子遊戲', 'Pokémon', '工具程式', '網頁收藏', '其他'];
+      const GRADE_PRESETS = ['F.3', 'F.4', 'F.5', 'F.6', 'HKDSE'];
+      const EMOJIS = [
+        '🧪', '⚛️', '🔬', '🧬', '🎲', '🦁', '🎮', '🧩',
+        '⚡', '🔥', '💧', '🐉', '🐍', '🛠️', '📊', '🌐',
+        '📚', '📝', '🧮', '🎨', '🚀', '📱', '📄', '📁'
+      ];
+      const FOLDER_COLORS = ['#2563eb', '#0d9488', '#7c3aed', '#ea580c', '#e11d48', '#ca8a04', '#475569'];
+
+      const DEFAULT_FOLDERS = [
+        { id: 'f_chem', name: '化學互動平台', icon: '🧪', color: '#0d9488' },
+        { id: 'f_games', name: '親子桌遊', icon: '🎲', color: '#ea580c' },
+        { id: 'f_pokemon', name: 'Pokémon 專區', icon: '⚡', color: '#ca8a04' },
+        { id: 'f_tools', name: '實用工具', icon: '🛠️', color: '#2563eb' },
+        { id: 'f_web', name: '線上網頁', icon: '🌐', color: '#7c3aed' },
+        { id: 'f_other', name: '未分類', icon: '📁', color: '#475569' }
+      ];
+
+      let db = null;
+      let works = [];
+      let folders = [];
+      let stagedFiles = [];
+      let activeFolder = 'all';
+      let activeCategory = 'all';
+      let activeQuickTag = 'all';
+      let activeType = 'all';
+      let searchQuery = '';
+      let sortBy = 'recent';
+      let viewMode = 'grid';
+      let classroomMode = false;
+      let batchMode = false;
+      let selectedBatchIds = new Set();
+      let importTab = 'files';
+      let classifyMode = 'auto';
+      let editingId = null;
+      let pendingConfirmAction = null;
+      let currentExternalUrl = null;
+      let currentBlobUrl = null;
+      let currentPyWork = null;
+
+      function nowLabel() {
+        const d = new Date();
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+
+      function bumpVersion(ver) {
+        const m = String(ver || 'v1.0').match(/^v?(\d+)\.(\d+)$/i);
+        if (!m) return 'v1.1';
+        return `v${m[1]}.${Number(m[2]) + 1}`;
+      }
+
+      const DEMO_WORKS = [
+        {
+          id: 'demo_chem_platform',
+          title: 'HKDSE 化學電解互動示意（示範）',
+          filename: 'chem_electrolysis_lab.html',
+          path: 'Chemistry/chem_electrolysis_lab.html',
+          type: 'html',
+          folderId: 'f_chem',
+          category: '化學教學',
+          isTeaching: true,
+          tags: ['F.5', 'HKDSE', '電解'],
+          version: 'v1.2',
+          history: [
+            { version: 'v1.2', date: '2026-11-22 10:30', note: '加入濃氯化鈉與硫酸銅溶液切換' },
+            { version: 'v1.0', date: '2026-11-18 09:00', note: '初次建立電解互動示範頁' }
+          ],
+          icon: '🧪',
+          note: '開啟「課堂模式」時會保留此類教學作品，隱藏私人遊戲。',
+          favorite: true,
+          isDemo: true,
+          size: 1850,
+          addedAt: Date.now() - 200000,
+          lastOpenedAt: Date.now() - 90000,
+          content: `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>化學電解互動示範</title><style>body{font-family:system-ui,sans-serif;background:#f0f9ff;margin:0;padding:20px;color:#0f172a;text-align:center}.card{background:#fff;max-width:480px;margin:16px auto;padding:20px;border-radius:16px;box-shadow:0 4px 16px rgba(2,132,199,.1)}button{padding:10px 18px;border-radius:10px;border:none;background:#0284c7;color:#fff;font-weight:700;cursor:pointer;margin:6px}</style></head><body><h2>🧪 F.5 電解互動示意（示範）</h2><div class="card"><p>選擇電解質溶液：</p><button onclick="show('CuSO4')">硫酸銅(II) 溶液</button><button onclick="show('NaCl')">濃氯化鈉溶液</button><div id="out" style="margin-top:16px;text-align:left;line-height:1.7">請選擇溶液查看陰陽極半反應。</div></div><script>function show(t){const el=document.getElementById('out');if(t==='CuSO4'){el.innerHTML='<b>陰極 (-)：</b>Cu²⁺(aq) + 2e⁻ → Cu(s)（紅棕色固體）<br><b>陽極 (+)：</b>4OH⁻(aq) → O₂(g) + 2H₂O(l) + 4e⁻（無色氣泡）'}else{el.innerHTML='<b>陰極 (-)：</b>2H⁺(aq) + 2e⁻ → H₂(g)（無色氣泡）<br><b>陽極 (+)：</b>2Cl⁻(aq) → Cl₂(g) + 2e⁻（黃綠色氣體）'}}<\/script></body></html>`
+        },
+        {
+          id: 'demo_web_link',
+          title: 'PhET 互動化學模擬（網頁示範）',
+          filename: 'phet.colorado.edu/zh_TW/simulations/filter?subjects=chemistry',
+          url: 'https://phet.colorado.edu/zh_TW/simulations/filter?subjects=chemistry',
+          openMode: 'newtab',
+          path: 'https://phet.colorado.edu/zh_TW/simulations/filter?subjects=chemistry',
+          type: 'web',
+          folderId: 'f_web',
+          category: '化學教學',
+          isTeaching: true,
+          tags: ['F.4', 'F.6', '線上實驗'],
+          version: 'v1.0',
+          history: [{ version: 'v1.0', date: '2026-11-20 14:00', note: '加入常用課堂化學模擬連結' }],
+          icon: '🌐',
+          note: '示範將常用線上教學網站加入課堂模式清單。',
+          favorite: false,
+          isDemo: true,
+          size: 0,
+          addedAt: Date.now() - 120000,
+          lastOpenedAt: Date.now() - 280000,
+          content: ''
+        },
+        {
+          id: 'demo_animal_chess',
+          title: '鬥獸棋（示範）',
+          filename: 'animal_chess_demo.html',
+          path: 'Games/animal_chess_demo.html',
+          type: 'html',
+          folderId: 'f_games',
+          category: '親子遊戲',
+          isTeaching: false,
+          tags: ['桌遊'],
+          version: 'v1.0',
+          history: [{ version: 'v1.0', date: '2026-11-19 20:15', note: '親子鬥獸棋初版' }],
+          icon: '🦁',
+          note: '點擊即可開局體驗；開啟右上角「🎓 課堂模式」會自動隱藏此私人遊戲。',
+          favorite: true,
+          isDemo: true,
+          size: 2180,
+          addedAt: Date.now() - 300000,
+          lastOpenedAt: Date.now() - 100000,
+          content: `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>鬥獸棋示範</title><style>body{font-family:system-ui,sans-serif;background:#f8fafc;margin:0;padding:20px;text-align:center;color:#0f172a}.board{display:grid;grid-template-columns:repeat(4,70px);gap:8px;justify-content:center;margin:18px auto}.cell{width:70px;height:70px;border-radius:14px;background:#fff;border:2px solid #cbd5e1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;user-select:none;transition:.15s}.cell.sel{border-color:#2563eb;background:#eff6ff;transform:scale(1.05)}.cell span{font-size:.72rem;font-weight:700;margin-top:2px}.red{color:#dc2626}.blue{color:#2563eb}</style></head><body><h2>🦁 迷你鬥獸棋（示範頁）</h2><p id="msg">點擊棋子再點空格移動</p><div class="board" id="b"></div><script>const init=[{e:'🐘',n:'象',t:'red'},{e:'🦁',n:'獅',t:'red'},{e:'🐯',n:'虎',t:'red'},{e:'🐭',n:'鼠',t:'red'},null,null,null,null,null,null,null,null,{e:'🐭',n:'鼠',t:'blue'},{e:'🐯',n:'虎',t:'blue'},{e:'🦁',n:'獅',t:'blue'},{e:'🐘',n:'象',t:'blue'}];let sel=-1;function draw(){const b=document.getElementById('b');b.innerHTML='';init.forEach((p,i)=>{const d=document.createElement('div');d.className='cell'+(sel===i?' sel':'');if(p)d.innerHTML=p.e+'<span class="'+p.t+'">'+p.n+'</span>';d.onclick=()=>{if(sel===-1&&p){sel=i}else if(sel===i){sel=-1}else if(sel!==-1){init[i]=init[sel];init[sel]=null;sel=-1;document.getElementById('msg').textContent='已移動！繼續點擊下一個棋子'}draw()};b.appendChild(d)})}draw();<\/script></body></html>`
+        },
+        {
+          id: 'demo_pokemon_chart',
+          title: 'Pokémon 屬性相剋對照表（示範）',
+          filename: 'pokemon_type_chart.html',
+          path: 'Pokemon/pokemon_type_chart.html',
+          type: 'html',
+          folderId: 'f_pokemon',
+          category: 'Pokémon',
+          isTeaching: false,
+          tags: ['對照表'],
+          version: 'v1.0',
+          history: [{ version: 'v1.0', date: '2026-11-19 21:00', note: '建立屬性相剋速查表' }],
+          icon: '⚡',
+          note: '快速查詢屬性 2× 剋制與弱點（課堂模式下自動隱藏）。',
+          favorite: true,
+          isDemo: true,
+          size: 1920,
+          addedAt: Date.now() - 250000,
+          lastOpenedAt: Date.now() - 120000,
+          content: `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pokémon 屬性對照表</title><style>body{font-family:system-ui,sans-serif;background:#fefce8;margin:0;padding:20px;color:#1e293b;max-width:520px;margin:0 auto}.btns{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}button{border:none;padding:9px 14px;border-radius:999px;font-weight:700;cursor:pointer;color:#fff}.box{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 16px rgba(0,0,0,.06)}h3{margin-top:0}</style></head><body><h2>⚡ Pokémon 屬性速查（示範）</h2><div class="btns" id="btns"></div><div class="box" id="res">請點選上方屬性查看相剋關係</div><script>const data={'火':{c:'#ef4444',s:['草','冰','蟲','鋼'],w:['水','地面','岩石']},'水':{c:'#3b82f6',s:['火','地面','岩石'],w:['草','電']},'草':{c:'#22c55e',s:['水','地面','岩石'],w:['火','冰','毒','飛行','蟲']},'電':{c:'#eab308',s:['水','飛行'],w:['地面']},'超能力':{c:'#ec4899',s:['格鬥','毒'],w:['蟲','幽靈','惡']},'龍':{c:'#6366f1',s:['龍'],w:['冰','龍','妖精']}};const wrap=document.getElementById('btns');Object.keys(data).forEach(k=>{const b=document.createElement('button');b.textContent=k;b.style.background=data[k].c;b.onclick=()=>{document.getElementById('res').innerHTML='<h3>'+k+'屬性</h3><p><b>✅ 效果絕佳 (2×)：</b>'+data[k].s.join('、')+'</p><p><b>⚠️ 弱點屬性：</b>'+data[k].w.join('、')+'</p>'};wrap.appendChild(b)});<\/script></body></html>`
+        },
+        {
+          id: 'demo_python_tool',
+          title: 'JFIF 批次轉 JPEG 工具（示範）',
+          filename: 'jfif_to_jpeg_batch.py',
+          path: 'PythonTools/jfif_to_jpeg_batch.py',
+          type: 'py',
+          folderId: 'f_tools',
+          category: '工具程式',
+          isTeaching: false,
+          tags: ['圖片工具'],
+          version: 'v1.0',
+          history: [{ version: 'v1.0', date: '2026-11-17 16:40', note: '批次轉檔腳本' }],
+          icon: '🐍',
+          note: '點開可檢視程式碼、一鍵複製或下載 .py 檔。',
+          favorite: false,
+          isDemo: true,
+          size: 560,
+          addedAt: Date.now() - 150000,
+          lastOpenedAt: Date.now() - 240000,
+          content: `from pathlib import Path\nfrom PIL import Image\n\ndef convert_jfif_folder(folder_path: str):\n    folder = Path(folder_path)\n    files = sorted(folder.glob("*.jfif"))\n    for f in files:\n        out = f.with_suffix(".jpg")\n        with Image.open(f) as img:\n            img.convert("RGB").save(out, "JPEG", quality=95)\n        print(f"Converted: {f.name} -> {out.name}")\n\nif __name__ == "__main__":\n    convert_jfif_folder(".")\n`
+        }
+      ];
+
+      const $ = (id) => document.getElementById(id);
+
+      function showToast(msg) {
+        const t = $('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(() => t.classList.remove('show'), 2500);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function formatBytes(bytes) {
+        if (!bytes || bytes < 1024) return (bytes || 0) + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+      }
+
+      function cleanUrlLabel(url) {
+        return String(url || '').replace(/^https?:\/\//i, '').replace(/\/$/, '');
+      }
+
+      function getFolderById(folderId) {
+        return folders.find((f) => f.id === folderId) || folders[folders.length - 1] || DEFAULT_FOLDERS[5];
+      }
+
+      function inferSuggestion(filename, title, content, type) {
+        const hay = (filename + ' ' + title + ' ' + (content || '').slice(0, 700)).toLowerCase();
+        const tags = [];
+        if (/(f\.?3|s\.?3|中三)/.test(hay)) tags.push('F.3');
+        if (/(f\.?4|s\.?4|中四)/.test(hay)) tags.push('F.4');
+        if (/(f\.?5|s\.?5|中五)/.test(hay)) tags.push('F.5');
+        if (/(f\.?6|s\.?6|中六)/.test(hay)) tags.push('F.6');
+        if (/(hkdse|dse)/.test(hay)) tags.push('HKDSE');
+
+        if (/(pokemon|pokémon|寶可夢|寵物小精靈|pokedex|屬性對照|相剋)/.test(hay)) {
+          return { category: 'Pokémon', folderId: 'f_pokemon', icon: '⚡', isTeaching: false, tags };
+        }
+        if (/(chem|化學|電解|electrolysis|hkdse|acid|alkali|redox|mole|organic|polymer|titration|中和|酸鹼)/.test(hay)) {
+          return { category: '化學教學', folderId: 'f_chem', icon: '🧪', isTeaching: true, tags };
+        }
+        if (/(鬥獸棋|飛行棋|棋|chess|game|puzzle|match|memory|連連看|遊戲|桌遊|quiz)/.test(hay)) {
+          return { category: '親子遊戲', folderId: 'f_games', icon: '🎲', isTeaching: false, tags };
+        }
+        if (type === 'web') {
+          return { category: '網頁收藏', folderId: 'f_web', icon: '🌐', isTeaching: tags.length > 0, tags };
+        }
+        if (type === 'py' || /(tool|convert|pdf|jfif|calc|util|script|工具|計算)/.test(hay)) {
+          return { category: '工具程式', folderId: 'f_tools', icon: type === 'py' ? '🐍' : '🛠️', isTeaching: false, tags };
+        }
+        return { category: '其他', folderId: 'f_other', icon: type === 'py' ? '🐍' : '📄', isTeaching: tags.length > 0, tags };
+      }
+
+      function extractHtmlTitle(content, filename) {
+        const m = String(content || '').match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+        if (m && m[1]) {
+          const clean = m[1].replace(/\s+/g, ' ').trim();
+          if (clean && clean.length <= 60) return clean;
+        }
+        return filename.replace(/\.(html|htm|py)$/i, '').replace(/[_-]+/g, ' ').trim() || filename;
+      }
+
+      function isTeachingItem(w) {
+        if (w.isTeaching === true) return true;
+        if (w.category === '化學教學') return true;
+        if (Array.isArray(w.tags) && w.tags.some((t) => GRADE_PRESETS.includes(t))) return true;
+        return false;
+      }
+
+      // IndexedDB
+      function openDB() {
+        return new Promise((resolve) => {
+          try {
+            if (!window.indexedDB) return resolve(null);
+            const req = indexedDB.open(DB_NAME, 1);
+            req.onupgradeneeded = (e) => {
+              const database = e.target.result;
+              if (!database.objectStoreNames.contains(STORE_WORKS)) database.createObjectStore(STORE_WORKS, { keyPath: 'id' });
+              if (!database.objectStoreNames.contains(STORE_FOLDERS)) database.createObjectStore(STORE_FOLDERS, { keyPath: 'id' });
+            };
+            req.onsuccess = (e) => resolve(e.target.result);
+            req.onerror = () => resolve(null);
+          } catch (err) {
+            resolve(null);
+          }
+        });
+      }
+
+      function dbGetAll(store) {
+        return new Promise((resolve) => {
+          if (!db) return resolve(null);
+          try {
+            const tx = db.transaction(store, 'readonly');
+            const req = tx.objectStore(store).getAll();
+            req.onsuccess = () => resolve(req.result || []);
+            req.onerror = () => resolve(null);
+          } catch (err) { resolve(null); }
+        });
+      }
+
+      function dbPut(store, item) {
+        return new Promise((resolve) => {
+          if (!db) return resolve();
+          try {
+            const tx = db.transaction(store, 'readwrite');
+            tx.objectStore(store).put(item);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => resolve();
+          } catch (err) { resolve(); }
+        });
+      }
+
+      function dbDelete(store, id) {
+        return new Promise((resolve) => {
+          if (!db) return resolve();
+          try {
+            const tx = db.transaction(store, 'readwrite');
+            tx.objectStore(store).delete(id);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => resolve();
+          } catch (err) { resolve(); }
+        });
+      }
+
+      function dbClear(store) {
+        return new Promise((resolve) => {
+          if (!db) return resolve();
+          try {
+            const tx = db.transaction(store, 'readwrite');
+            tx.objectStore(store).clear();
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => resolve();
+          } catch (err) { resolve(); }
+        });
+      }
+
+      // Theme, View & Classroom Mode
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        $('themeIconSun').style.display = theme === 'dark' ? 'block' : 'none';
+        $('themeIconMoon').style.display = theme === 'dark' ? 'none' : 'block';
+        try { localStorage.setItem('ai_hub_theme', theme); } catch (e) {}
+      }
+
+      function applyViewMode(mode) {
+        viewMode = mode;
+        $('cardsGrid').classList.toggle('list-view', mode === 'list');
+        $('viewGridIcon').style.display = mode === 'grid' ? 'block' : 'none';
+        $('viewListIcon').style.display = mode === 'list' ? 'block' : 'none';
+        try { localStorage.setItem('ai_hub_view', mode); } catch (e) {}
+      }
+
+      function applyClassroomMode(enabled) {
+        classroomMode = enabled;
+        document.body.classList.toggle('classroom-mode', enabled);
+        $('classroomToggleBtn').classList.toggle('active', enabled);
+        $('classroomBtnLabel').textContent = enabled ? '課堂中' : '課堂模式';
+        $('brandNameText').textContent = enabled ? '教學作品館' : 'AI 作品館';
+        if (enabled) {
+          activeFolder = 'all';
+          activeCategory = 'all';
+        }
+        try { localStorage.setItem('ai_hub_classroom', enabled ? '1' : '0'); } catch (e) {}
+        renderAll();
+      }
+
+      function populateFolderSelect(selectEl, selectedId) {
+        selectEl.innerHTML = folders
+          .map((f) => `<option value="${escapeHtml(f.id)}" ${f.id === selectedId ? 'selected' : ''}>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</option>`)
+          .join('');
+      }
+
+      function populateCategorySelect(selectEl, selectedCat) {
+        selectEl.innerHTML = CATEGORIES
+          .map((c) => `<option value="${escapeHtml(c)}" ${c === selectedCat ? 'selected' : ''}>${escapeHtml(c)}</option>`)
+          .join('');
+      }
+
+      function renderEmojiPicker(containerEl, selectedEmoji) {
+        containerEl.innerHTML = EMOJIS.map(
+          (e) => `<button type="button" class="emoji-opt ${e === selectedEmoji ? 'selected' : ''}" data-emoji="${e}">${e}</button>`
+        ).join('');
+      }
+
+      function renderColorPicker(containerEl, selectedColor) {
+        containerEl.innerHTML = FOLDER_COLORS.map(
+          (c) => `<button type="button" class="color-dot ${c === selectedColor ? 'selected' : ''}" data-color="${c}" style="background:${c};" aria-label="顏色 ${c}"></button>`
+        ).join('');
+      }
+
+      // Base visible pool (respects Classroom Mode)
+      function getVisiblePool() {
+        return classroomMode ? works.filter(isTeachingItem) : works;
+      }
+
+      function getFilteredWorks() {
+        const q = searchQuery.trim().toLowerCase();
+        return getVisiblePool()
+          .filter((w) => {
+            if (!classroomMode && activeFolder !== 'all' && w.folderId !== activeFolder) return false;
+            if (activeType !== 'all' && w.type !== activeType) return false;
+            if (activeQuickTag !== 'all' && !(Array.isArray(w.tags) && w.tags.includes(activeQuickTag))) return false;
+            if (!classroomMode && activeCategory === 'fav' && !w.favorite) return false;
+            if (!classroomMode && activeCategory !== 'all' && activeCategory !== 'fav' && w.category !== activeCategory) return false;
+            if (q) {
+              const folderName = getFolderById(w.folderId).name;
+              const tagStr = (w.tags || []).join(' ');
+              const target = (w.title + ' ' + w.filename + ' ' + (w.url || '') + ' ' + (w.path || '') + ' ' + (w.note || '') + ' ' + w.category + ' ' + folderName + ' ' + tagStr + ' ' + (w.version || '')).toLowerCase();
+              if (!target.includes(q)) return false;
+            }
+            return true;
+          })
+          .sort((a, b) => {
+            if (sortBy === 'name') return a.filename.localeCompare(b.filename, 'zh-Hant');
+            if (sortBy === 'newest') return (b.addedAt || 0) - (a.addedAt || 0);
+            return (b.lastOpenedAt || b.addedAt || 0) - (a.lastOpenedAt || a.addedAt || 0);
+          });
+      }
+
+      function renderQuickStrip() {
+        const pool = getVisiblePool();
+        const favs = pool.filter((w) => w.favorite).slice(0, 10);
+        const sec = $('quickSection');
+        if (favs.length === 0) {
+          sec.style.display = 'none';
+          return;
+        }
+        sec.style.display = 'block';
+        $('quickStrip').innerHTML = favs
+          .map(
+            (w) => `
+              <button type="button" class="quick-chip" data-quick-id="${escapeHtml(w.id)}">
+                <span class="quick-chip-icon">${escapeHtml(w.icon || '📄')}</span>
+                <span class="quick-chip-text">
+                  <div class="quick-chip-title">${escapeHtml(w.title)}</div>
+                  <div class="quick-chip-file">${escapeHtml(w.filename)}</div>
+                </span>
+              </button>
+            `
+          )
+          .join('');
+      }
+
+      function renderFolders() {
+        $('folderSection').style.display = classroomMode ? 'none' : 'block';
+        const bar = $('folderBar');
+        const allBtn = `<button type="button" class="folder-chip ${activeFolder === 'all' ? 'active' : ''}" data-folder="all"><span>🗂️ 全部資料夾</span><span class="f-num">${works.length}</span></button>`;
+        const folderBtns = folders
+          .map((f) => {
+            const cnt = works.filter((w) => w.folderId === f.id).length;
+            return `<button type="button" class="folder-chip ${activeFolder === f.id ? 'active' : ''}" data-folder="${escapeHtml(f.id)}">` +
+              `<span class="f-dot" style="background:${escapeHtml(f.color || '#2563eb')}"></span>` +
+              `<span>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</span>` +
+              `<span class="f-num">${cnt}</span></button>`;
+          })
+          .join('');
+        const addBtn = `<button type="button" class="folder-add-btn" id="inlineAddFolderBtn">+ 新增資料夾</button>`;
+        bar.innerHTML = allBtn + folderBtns + addBtn;
+        populateFolderSelect($('batchFolderSelect'), folders[0] ? folders[0].id : 'f_other');
+      }
+
+      function renderQuickTagBar() {
+        const pool = getVisiblePool();
+        const tagSet = new Set(GRADE_PRESETS);
+        pool.forEach((w) => (w.tags || []).forEach((t) => tagSet.add(t)));
+        const tags = Array.from(tagSet);
+        const bar = $('quickTagBar');
+        bar.innerHTML =
+          `<button type="button" class="tag-pill ${activeQuickTag === 'all' ? 'active' : ''}" data-qtag="all">🏷️ 全部年級/課題</button>` +
+          tags
+            .map((t) => {
+              const cnt = pool.filter((w) => (w.tags || []).includes(t)).length;
+              if (cnt === 0 && !GRADE_PRESETS.includes(t)) return '';
+              return `<button type="button" class="tag-pill ${activeQuickTag === t ? 'active' : ''}" data-qtag="${escapeHtml(t)}">${escapeHtml(t)} <span style="opacity:.72">${cnt}</span></button>`;
+            })
+            .join('');
+      }
+
+      function renderCategories() {
+        const bar = $('categoryBar');
+        if (classroomMode) {
+          bar.style.display = 'none';
+          return;
+        }
+        bar.style.display = 'flex';
+        const favCount = works.filter((w) => w.favorite).length;
+        const pills = [
+          { key: 'all', label: '全部主題', count: works.length },
+          { key: 'fav', label: '★ 常用', count: favCount }
+        ];
+        CATEGORIES.forEach((cat) => {
+          const count = works.filter((w) => w.category === cat).length;
+          pills.push({ key: cat, label: cat, count });
+        });
+
+        bar.innerHTML = pills
+          .map(
+            (p) =>
+              `<button type="button" class="cat-pill ${activeCategory === p.key ? 'active' : ''}" data-cat="${escapeHtml(p.key)}">` +
+              `<span>${escapeHtml(p.label)}</span>` +
+              `<span class="pill-num">${p.count}</span></button>`
+          )
+          .join('');
+      }
+
+      function renderCards() {
+        const pool = getVisiblePool();
+        $('totalCountBadge').textContent = String(pool.length);
+        $('demoBanner').style.display = !classroomMode && works.some((w) => w.isDemo) ? 'flex' : 'none';
+        $('batchBar').classList.toggle('visible', batchMode);
+        $('batchToggleBtn').classList.toggle('active', batchMode);
+        $('batchCountText').textContent = `已選取 ${selectedBatchIds.size} 個作品`;
+
+        const list = getFilteredWorks();
+        const grid = $('cardsGrid');
+        const empty = $('emptyState');
+
+        if (list.length === 0) {
+          grid.innerHTML = '';
+          empty.style.display = 'block';
+          const isFiltered = pool.length > 0;
+          $('emptyTitle').textContent = classroomMode && pool.length === 0
+            ? '課堂模式下暫無教學作品'
+            : isFiltered ? '找不到符合條件的作品' : '作品館目前是空的';
+          $('emptyDesc').textContent = classroomMode && pool.length === 0
+            ? '可先退出課堂模式，在作品的「⋯」設定中勾選「課堂教學專用」或加上 F.4／F.5／F.6 標籤。'
+            : isFiltered
+            ? '試試清除搜尋關鍵字，或切回「全部年級/課題」與「全部資料夾」。'
+            : '按右上角「加入作品」，即可匯入 .html、.py 檔案或新增常用網頁。';
+          $('emptyResetBtn').style.display = isFiltered ? 'inline-flex' : 'none';
+          return;
+        }
+
+        empty.style.display = 'none';
+        grid.innerHTML = list
+          .map((w) => {
+            const folder = getFolderById(w.folderId);
+            const isSelected = selectedBatchIds.has(w.id);
+            const typeClass = w.type === 'html' ? 'type-html' : w.type === 'py' ? 'type-py' : 'type-web';
+            const typeLabel = w.type === 'html' ? '.HTML' : w.type === 'py' ? '.PY' : 'WEB';
+            const openText = w.type === 'html' ? '開啟頁面 →' : w.type === 'py' ? '檢視程式 →' : '前往網頁 →';
+            const tagsHtml = (w.tags || []).map((t) => `<span class="quick-tag">${escapeHtml(t)}</span>`).join('');
+            return `
+              <article class="card ${isSelected ? 'selected-batch' : ''}" data-id="${escapeHtml(w.id)}" style="--accent:${escapeHtml(folder.color || '#2563eb')};" tabindex="0" role="button" aria-label="開啟 ${escapeHtml(w.title)}">
+                <div class="card-top">
+                  ${batchMode ? `<input type="checkbox" class="batch-check" data-batch-id="${escapeHtml(w.id)}" ${isSelected ? 'checked' : ''} />` : ''}
+                  <div class="card-avatar">${escapeHtml(w.icon || (w.type === 'py' ? '🐍' : w.type === 'web' ? '🌐' : '📄'))}</div>
+                  <div class="card-head">
+                    <div class="card-title-row">
+                      <h2 class="card-title" title="${escapeHtml(w.title)}">${escapeHtml(w.title)}</h2>
+                      <span class="ver-chip">${escapeHtml(w.version || 'v1.0')}</span>
+                      ${w.isDemo ? '<span class="demo-chip">示範</span>' : ''}
+                    </div>
+                  </div>
+                  <div class="card-actions">
+                    <button type="button" class="mini-btn ${w.favorite ? 'fav-active' : ''}" data-action="fav" data-id="${escapeHtml(w.id)}" title="常用釘選" aria-label="常用">
+                      ${w.favorite ? '★' : '☆'}
+                    </button>
+                    <button type="button" class="mini-btn" data-action="edit" data-id="${escapeHtml(w.id)}" title="編輯、標籤與版本紀錄" aria-label="編輯">
+                      ⋯
+                    </button>
+                  </div>
+                </div>
+                <div class="card-filename-row">
+                  <span class="filename-badge" title="${escapeHtml(w.path || w.filename)}">
+                    ${escapeHtml(w.filename)}
+                  </span>
+                </div>
+                ${tagsHtml ? `<div class="card-tags-line">${tagsHtml}</div>` : ''}
+                ${w.note ? `<p class="card-note">${escapeHtml(w.note)}</p>` : ''}
+                <div class="card-footer">
+                  <div class="card-tags">
+                    <span class="type-badge ${typeClass}">${typeLabel}</span>
+                    <span class="cat-tag">${escapeHtml(folder.icon)} ${escapeHtml(folder.name)}</span>
+                    ${isTeachingItem(w) ? '<span class="cat-tag">🎓 課堂</span>' : ''}
+                  </div>
+                  <span class="open-hint">${openText}</span>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+      }
+
+      function renderAll() {
+        renderQuickStrip();
+        renderFolders();
+        renderQuickTagBar();
+        renderCategories();
+        renderCards();
+      }
+
+      // Launch Work
+      async function openWork(id) {
+        const w = works.find((item) => item.id === id);
+        if (!w) return;
+        w.lastOpenedAt = Date.now();
+        await dbPut(STORE_WORKS, w);
+        renderCards();
+
+        if (w.type === 'web') {
+          const targetUrl = w.url || w.path;
+          if (w.openMode === 'embed') {
+            currentExternalUrl = targetUrl;
+            if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
+            $('runnerTitle').textContent = w.title;
+            $('runnerFilename').textContent = w.filename;
+            $('runnerIframe').removeAttribute('srcdoc');
+            $('runnerIframe').src = targetUrl;
+            $('htmlRunnerOverlay').classList.add('open');
+            $('htmlRunnerOverlay').setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          } else {
+            window.open(targetUrl, '_blank', 'noopener');
+            showToast('已在新分頁開啟 ' + w.title);
+          }
+          return;
+        }
+
+        if (w.type === 'html') {
+          currentExternalUrl = null;
+          $('runnerTitle').textContent = `${w.title} (${w.version || 'v1.0'})`;
+          $('runnerFilename').textContent = w.filename;
+          const iframe = $('runnerIframe');
+          if (currentBlobUrl) { URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = null; }
+          try {
+            const blob = new Blob([w.content], { type: 'text/html;charset=utf-8' });
+            currentBlobUrl = URL.createObjectURL(blob);
+          } catch (e) {}
+          iframe.removeAttribute('src');
+          iframe.srcdoc = w.content;
+          $('htmlRunnerOverlay').classList.add('open');
+          $('htmlRunnerOverlay').setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        } else {
+          currentPyWork = w;
+          $('pyViewerTitle').textContent = `${w.title} (${w.version || 'v1.0'})`;
+          $('pyViewerFilename').textContent = w.filename;
+          const lines = (w.content || '').split(/\r?\n/).length;
+          const folder = getFolderById(w.folderId);
+          $('pyMetaStrip').innerHTML =
+            `<span class="type-badge type-py">.PY</span>` +
+            `<span class="cat-tag">${escapeHtml(folder.icon)} ${escapeHtml(folder.name)}</span>` +
+            `<span class="cat-tag">${escapeHtml(w.version || 'v1.0')}</span>` +
+            `<span>共 ${lines} 行</span>` +
+            `<span>大小：${formatBytes(w.size || (w.content || '').length)}</span>`;
+          $('pyCodeContent').textContent = w.content || '';
+          $('pyViewerOverlay').classList.add('open');
+          $('pyViewerOverlay').setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      function closeHtmlRunner() {
+        $('htmlRunnerOverlay').classList.remove('open');
+        $('htmlRunnerOverlay').setAttribute('aria-hidden', 'true');
+        $('runnerIframe').srcdoc = '';
+        $('runnerIframe').removeAttribute('src');
+        document.body.style.overflow = '';
+      }
+
+      function closePyViewer() {
+        $('pyViewerOverlay').classList.remove('open');
+        $('pyViewerOverlay').setAttribute('aria-hidden', 'true');
+        currentPyWork = null;
+        document.body.style.overflow = '';
+      }
+
+      // Import Modal
+      function switchImportTab(tab) {
+        importTab = tab;
+        document.querySelectorAll('.modal-tab').forEach((t) => {
+          t.classList.toggle('active', t.getAttribute('data-import-tab') === tab);
+        });
+        $('importTabFiles').style.display = tab === 'files' ? 'flex' : 'none';
+        $('importTabWeb').style.display = tab === 'web' ? 'flex' : 'none';
+        $('confirmImportBtn').style.display = tab === 'files' ? 'inline-flex' : 'none';
+        $('confirmWebBtn').style.display = tab === 'web' ? 'inline-flex' : 'none';
+      }
+
+      function openImportModal() {
+        stagedFiles = [];
+        renderStagedList();
+        populateFolderSelect($('manualFolderSelect'), folders[0] ? folders[0].id : 'f_other');
+        populateCategorySelect($('manualCatSelect'), CATEGORIES[0]);
+        populateFolderSelect($('webFolderSelect'), 'f_web');
+        populateCategorySelect($('webCatSelect'), '網頁收藏');
+        renderEmojiPicker($('webEmojiPicker'), '🌐');
+        $('webUrlInput').value = '';
+        $('webTitleInput').value = '';
+        $('webTagsInput').value = '';
+        $('webTeachingCheck').checked = classroomMode;
+        $('webNoteInput').value = '';
+        $('importUpdateNoteInput').value = '';
+        switchImportTab('files');
+        $('importModal').classList.add('open');
+      }
+
+      function closeImportModal() {
+        $('importModal').classList.remove('open');
+        stagedFiles = [];
+        $('filePickerInput').value = '';
+        $('folderPickerInput').value = '';
+      }
+
+      async function handleIncomingFileList(fileList) {
+        const all = Array.from(fileList || []);
+        const matched = all.filter((f) => /\.(html|htm|py)$/i.test(f.name));
+        const skipped = all.length - matched.length;
+
+        if (matched.length === 0) {
+          showToast(all.length > 0 ? '所選路徑中沒有 .html 或 .py 檔案' : '未選取任何檔案');
+          return;
+        }
+
+        const parsed = [];
+        for (const file of matched) {
+          try {
+            const text = await file.text();
+            const isPy = /\.py$/i.test(file.name);
+            const type = isPy ? 'py' : 'html';
+            const title = isPy
+              ? file.name.replace(/\.py$/i, '').replace(/[_-]+/g, ' ').trim() || file.name
+              : extractHtmlTitle(text, file.name);
+            const guess = inferSuggestion(file.name, title, text, type);
+            const folderId = classifyMode === 'manual' ? $('manualFolderSelect').value : guess.folderId;
+            const category = classifyMode === 'manual' ? $('manualCatSelect').value : guess.category;
+            const existing = works.find((w) => w.filename.toLowerCase() === file.name.toLowerCase() && !w.isDemo);
+            parsed.push({
+              selected: true,
+              filename: file.name,
+              path: file.webkitRelativePath || file.name,
+              type,
+              title,
+              folderId: existing ? existing.folderId : folderId,
+              category: existing ? existing.category : category,
+              isTeaching: existing ? existing.isTeaching : guess.isTeaching,
+              tags: existing ? (existing.tags || []) : guess.tags,
+              icon: existing ? existing.icon : guess.icon,
+              size: file.size,
+              content: text,
+              exists: Boolean(existing),
+              nextVersion: existing ? bumpVersion(existing.version) : 'v1.0'
+            });
+          } catch (e) {}
+        }
+
+        parsed.forEach((item) => {
+          const idx = stagedFiles.findIndex((s) => s.filename.toLowerCase() === item.filename.toLowerCase());
+          if (idx >= 0) stagedFiles[idx] = item;
+          else stagedFiles.push(item);
+        });
+
+        if (!$('importModal').classList.contains('open')) openImportModal();
+        switchImportTab('files');
+        renderStagedList(skipped);
+      }
+
+      function renderStagedList(skippedCount) {
+        const wrap = $('stagedWrap');
+        const listEl = $('stagedList');
+        const btn = $('confirmImportBtn');
+
+        if (stagedFiles.length === 0) {
+          wrap.classList.remove('visible');
+          $('updateNoteFieldWrap').style.display = 'none';
+          btn.disabled = true;
+          btn.textContent = '確認加入 (0)';
+          return;
+        }
+
+        wrap.classList.add('visible');
+        const selectedCount = stagedFiles.filter((s) => s.selected).length;
+        const hasUpdate = stagedFiles.some((s) => s.exists && s.selected);
+        $('updateNoteFieldWrap').style.display = hasUpdate ? 'flex' : 'none';
+        const skipNote = skippedCount ? `（已略過 ${skippedCount} 個其他檔案）` : '';
+        $('stagedSummary').textContent = `已篩選出 ${stagedFiles.length} 個檔案${skipNote}`;
+        btn.disabled = selectedCount === 0;
+        btn.textContent = `確認加入 (${selectedCount})`;
+
+        listEl.innerHTML = stagedFiles
+          .map(
+            (s, i) => `
+              <div class="staged-item">
+                <input type="checkbox" data-staged-idx="${i}" ${s.selected ? 'checked' : ''} />
+                <div class="staged-info">
+                  <div class="staged-name">${escapeHtml(s.icon)} ${escapeHtml(s.title)} ${s.exists ? `<span class="demo-chip">更新至 ${escapeHtml(s.nextVersion)}</span>` : ''}</div>
+                  <div class="staged-file">${escapeHtml(s.path)} · ${formatBytes(s.size)}</div>
+                </div>
+                <div class="staged-selects">
+                  <select class="staged-cat" data-staged-folder="${i}" title="資料夾">
+                    ${folders.map((f) => `<option value="${escapeHtml(f.id)}" ${s.folderId === f.id ? 'selected' : ''}>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</option>`).join('')}
+                  </select>
+                  <select class="staged-cat" data-staged-cat="${i}" title="主題標籤">
+                    ${CATEGORIES.map((c) => `<option value="${escapeHtml(c)}" ${s.category === c ? 'selected' : ''}>${escapeHtml(c)}</option>`).join('')}
+                  </select>
+                </div>
+              </div>
+            `
+          )
+          .join('');
+      }
+
+      async function commitStagedFiles() {
+        const chosen = stagedFiles.filter((s) => s.selected);
+        if (chosen.length === 0) return;
+        const customUpdateNote = $('importUpdateNoteInput').value.trim();
+
+        let added = 0;
+        let updated = 0;
+        for (const s of chosen) {
+          const existing = works.find((w) => w.filename.toLowerCase() === s.filename.toLowerCase() && !w.isDemo);
+          if (existing) {
+            const newVer = bumpVersion(existing.version);
+            existing.content = s.content;
+            existing.size = s.size;
+            existing.path = s.path;
+            existing.folderId = s.folderId;
+            existing.category = s.category;
+            existing.version = newVer;
+            existing.addedAt = Date.now();
+            if (!Array.isArray(existing.history)) existing.history = [];
+            existing.history.unshift({
+              version: newVer,
+              date: nowLabel(),
+              note: customUpdateNote || '匯入新版檔案覆蓋更新'
+            });
+            await dbPut(STORE_WORKS, existing);
+            updated++;
+          } else {
+            const item = {
+              id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+              title: s.title,
+              filename: s.filename,
+              path: s.path,
+              type: s.type,
+              folderId: s.folderId,
+              category: s.category,
+              isTeaching: s.isTeaching || s.category === '化學教學',
+              tags: s.tags || [],
+              version: 'v1.0',
+              history: [{ version: 'v1.0', date: nowLabel(), note: '初次加入作品館' }],
+              icon: s.icon,
+              note: '',
+              favorite: false,
+              isDemo: false,
+              size: s.size,
+              addedAt: Date.now(),
+              lastOpenedAt: Date.now(),
+              content: s.content
+            };
+            works.unshift(item);
+            await dbPut(STORE_WORKS, item);
+            added++;
+          }
+        }
+
+        closeImportModal();
+        renderAll();
+        showToast(updated > 0 ? `已新增 ${added} 個並更新 ${updated} 個版本` : `成功加入 ${added} 個作品`);
+      }
+
+      async function commitWebLink() {
+        let rawUrl = $('webUrlInput').value.trim();
+        if (!rawUrl) return showToast('請輸入網頁網址');
+        if (!/^https?:\/\//i.test(rawUrl)) rawUrl = 'https://' + rawUrl;
+        const cleanLabel = cleanUrlLabel(rawUrl);
+        const title = $('webTitleInput').value.trim() || cleanLabel;
+        const selEmoji = $('webEmojiPicker').querySelector('.emoji-opt.selected');
+        const icon = selEmoji ? selEmoji.getAttribute('data-emoji') : '🌐';
+        const tags = $('webTagsInput').value.split(/[,，]/).map((t) => t.trim()).filter(Boolean);
+
+        const item = {
+          id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+          title,
+          filename: cleanLabel,
+          url: rawUrl,
+          openMode: $('webOpenModeSelect').value,
+          path: rawUrl,
+          type: 'web',
+          folderId: $('webFolderSelect').value,
+          category: $('webCatSelect').value,
+          isTeaching: $('webTeachingCheck').checked || $('webCatSelect').value === '化學教學',
+          tags,
+          version: 'v1.0',
+          history: [{ version: 'v1.0', date: nowLabel(), note: '加入網頁捷徑' }],
+          icon,
+          note: $('webNoteInput').value.trim(),
+          favorite: false,
+          isDemo: false,
+          size: 0,
+          addedAt: Date.now(),
+          lastOpenedAt: Date.now(),
+          content: ''
+        };
+        works.unshift(item);
+        await dbPut(STORE_WORKS, item);
+        closeImportModal();
+        renderAll();
+        showToast('已加入網頁捷徑');
+      }
+
+      // Folder Manager
+      function openFolderModal() {
+        $('newFolderNameInput').value = '';
+        renderEmojiPicker($('folderEmojiPicker'), '📁');
+        renderColorPicker($('folderColorPicker'), FOLDER_COLORS[0]);
+        renderFolderMgrList();
+        $('folderModal').classList.add('open');
+      }
+
+      function renderFolderMgrList() {
+        $('folderMgrList').innerHTML = folders
+          .map((f) => {
+            const cnt = works.filter((w) => w.folderId === f.id).length;
+            const isDefaultOther = f.id === 'f_other';
+            return `
+              <div class="folder-mgr-item">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span style="width:10px; height:10px; border-radius:50%; background:${escapeHtml(f.color || '#2563eb')};"></span>
+                  <strong>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</strong>
+                  <span style="font-size:0.74rem; color:var(--text-muted);">(${cnt} 項)</span>
+                </div>
+                ${isDefaultOther ? '<span style="font-size:0.74rem; color:var(--text-muted);">預設</span>' : `<button type="button" class="demo-clear-btn" data-del-folder="${escapeHtml(f.id)}">刪除</button>`}
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      async function createNewFolder() {
+        const name = $('newFolderNameInput').value.trim();
+        if (!name) return showToast('請輸入資料夾名稱');
+        const selEmoji = $('folderEmojiPicker').querySelector('.emoji-opt.selected');
+        const selColor = $('folderColorPicker').querySelector('.color-dot.selected');
+        const folder = {
+          id: 'f_' + Date.now(),
+          name,
+          icon: selEmoji ? selEmoji.getAttribute('data-emoji') : '📁',
+          color: selColor ? selColor.getAttribute('data-color') : FOLDER_COLORS[0]
+        };
+        folders.splice(Math.max(0, folders.length - 1), 0, folder);
+        await dbPut(STORE_FOLDERS, folder);
+        $('newFolderNameInput').value = '';
+        renderFolderMgrList();
+        renderAll();
+        showToast(`已建立資料夾「${name}」`);
+      }
+
+      // Edit Modal + Version History
+      function renderEditHistory(w) {
+        const list = Array.isArray(w.history) && w.history.length > 0
+          ? w.history
+          : [{ version: w.version || 'v1.0', date: nowLabel(), note: '已收錄於作品館' }];
+        $('editHistoryList').innerHTML = list
+          .map(
+            (h) => `
+              <div class="history-item">
+                <span class="ver-chip">${escapeHtml(h.version)}</span>
+                <div style="flex:1; min-width:0;">
+                  <div>${escapeHtml(h.note)}</div>
+                  <div class="history-date">${escapeHtml(h.date)}</div>
+                </div>
+              </div>
+            `
+          )
+          .join('');
+      }
+
+      function openEditModal(id) {
+        const w = works.find((item) => item.id === id);
+        if (!w) return;
+        editingId = id;
+        $('editFilenameLabel').textContent = w.type === 'web' ? '網頁網址（固定顯示於卡片上）' : '原始檔名（固定顯示於卡片上）';
+        $('editFilenamePreview').textContent = w.filename;
+        $('editTitleInput').value = w.title;
+        $('editVersionInput').value = w.version || 'v1.0';
+        populateFolderSelect($('editFolderSelect'), w.folderId || 'f_other');
+        populateCategorySelect($('editCategorySelect'), CATEGORIES.includes(w.category) ? w.category : '其他');
+        $('editTeachingCheck').checked = isTeachingItem(w);
+        $('editNoteInput').value = w.note || '';
+        $('newChangelogInput').value = '';
+        renderEmojiPicker($('emojiPicker'), w.icon || '📄');
+
+        const currentTags = Array.isArray(w.tags) ? w.tags : [];
+        $('editPresetGradeTags').innerHTML = GRADE_PRESETS.map(
+          (g) => `<button type="button" class="preset-tag-btn ${currentTags.includes(g) ? 'active' : ''}" data-preset-grade="${g}">${g}</button>`
+        ).join('');
+        $('editCustomTagsInput').value = currentTags.filter((t) => !GRADE_PRESETS.includes(t)).join(', ');
+
+        renderEditHistory(w);
+        $('editModal').classList.add('open');
+      }
+
+      function closeEditModal() {
+        $('editModal').classList.remove('open');
+        editingId = null;
+      }
+
+      async function saveEdit() {
+        const w = works.find((item) => item.id === editingId);
+        if (!w) return;
+        w.title = $('editTitleInput').value.trim() || w.filename;
+        w.version = $('editVersionInput').value.trim() || 'v1.0';
+        w.folderId = $('editFolderSelect').value;
+        w.category = $('editCategorySelect').value;
+        w.isTeaching = $('editTeachingCheck').checked;
+        w.note = $('editNoteInput').value.trim();
+
+        const selectedGrades = Array.from($('editPresetGradeTags').querySelectorAll('.preset-tag-btn.active')).map((b) => b.getAttribute('data-preset-grade'));
+        const customTags = $('editCustomTagsInput').value.split(/[,，]/).map((t) => t.trim()).filter(Boolean);
+        w.tags = Array.from(new Set([...selectedGrades, ...customTags]));
+
+        const selEmoji = $('emojiPicker').querySelector('.emoji-opt.selected');
+        if (selEmoji) w.icon = selEmoji.getAttribute('data-emoji');
+        await dbPut(STORE_WORKS, w);
+        closeEditModal();
+        renderAll();
+        showToast('已更新作品資訊');
+      }
+
+      // Confirmation Modal
+      function askConfirm(title, message, onConfirm) {
+        $('confirmTitle').textContent = title;
+        $('confirmMessage').textContent = message;
+        pendingConfirmAction = onConfirm;
+        $('confirmModal').classList.add('open');
+      }
+
+      function closeConfirm() {
+        $('confirmModal').classList.remove('open');
+        pendingConfirmAction = null;
+      }
+
+      // Backup & Restore (.json)
+      function buildExportPayload() {
+        return {
+          app: 'AI_Works_Hub',
+          version: 3,
+          exportedAt: new Date().toISOString(),
+          folders,
+          works
+        };
+      }
+
+      function exportBackup() {
+        if (works.length === 0) return showToast('目前沒有可匯出的作品');
+        const blob = new Blob([JSON.stringify(buildExportPayload())], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `ai_works_hub_backup_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showToast('已開始下載完整備份檔');
+      }
+
+      async function mergeBackupData(data) {
+        if (!data || !Array.isArray(data.works)) throw new Error('格式不正確');
+        if (Array.isArray(data.folders)) {
+          for (const f of data.folders) {
+            if (!f.id || !f.name) continue;
+            if (!folders.some((x) => x.id === f.id)) {
+              folders.push(f);
+              await dbPut(STORE_FOLDERS, f);
+            }
+          }
+        }
+        let count = 0;
+        for (const item of data.works) {
+          if (!item.filename) continue;
+          if (!item.folderId) item.folderId = 'f_other';
+          if (!item.version) item.version = 'v1.0';
+          if (!Array.isArray(item.tags)) item.tags = [];
+          const idx = works.findIndex((w) => w.id === item.id || w.filename.toLowerCase() === item.filename.toLowerCase());
+          if (idx >= 0) works[idx] = item;
+          else works.unshift(item);
+          await dbPut(STORE_WORKS, item);
+          count++;
+        }
+        renderAll();
+        return count;
+      }
+
+      async function importBackupFile(file) {
+        if (!file) return;
+        try {
+          const data = JSON.parse(await file.text());
+          const count = await mergeBackupData(data);
+          $('settingsModal').classList.remove('open');
+          showToast(`已還原 ${count} 個作品`);
+        } catch (e) {
+          showToast('讀取備份檔失敗');
+        }
+      }
+
+      // GitHub Gist Cloud Sync
+      function loadSyncConfig() {
+        try {
+          $('syncTokenInput').value = localStorage.getItem('ai_hub_gh_token') || '';
+          $('syncGistIdInput').value = localStorage.getItem('ai_hub_gh_gist') || '';
+          const last = localStorage.getItem('ai_hub_gh_last');
+          if (last) $('syncStatusText').textContent = '上次同步：' + last;
+        } catch (e) {}
+      }
+
+      function saveSyncConfig() {
+        try {
+          localStorage.setItem('ai_hub_gh_token', $('syncTokenInput').value.trim());
+          localStorage.setItem('ai_hub_gh_gist', $('syncGistIdInput').value.trim());
+        } catch (e) {}
+      }
+
+      async function syncPushGist() {
+        const token = $('syncTokenInput').value.trim();
+        let gistId = $('syncGistIdInput').value.trim();
+        if (!token) return showToast('請先輸入 GitHub Token');
+        saveSyncConfig();
+        $('syncStatusText').textContent = '正在上傳至雲端...';
+        try {
+          const payloadStr = JSON.stringify(buildExportPayload());
+          const url = gistId ? `https://api.github.com/gists/${encodeURIComponent(gistId)}` : 'https://api.github.com/gists';
+          const method = gistId ? 'PATCH' : 'POST';
+          const res = await fetch(url, {
+            method,
+            headers: {
+              Authorization: `token ${token}`,
+              Accept: 'application/vnd.github+json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              description: 'AI Works Hub Cloud Sync Backup',
+              public: false,
+              files: { 'ai_works_hub_sync.json': { content: payloadStr } }
+            })
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const result = await res.json();
+          if (result.id) {
+            $('syncGistIdInput').value = result.id;
+            saveSyncConfig();
+          }
+          const ts = nowLabel();
+          try { localStorage.setItem('ai_hub_gh_last', ts); } catch (e) {}
+          $('syncStatusText').textContent = '上次上傳：' + ts;
+          showToast('☁️ 已同步上傳至 GitHub 雲端');
+        } catch (err) {
+          $('syncStatusText').textContent = '上傳失敗，請檢查 Token 或網絡';
+          showToast('雲端上傳失敗，請確認 Token 含 gist 權限');
+        }
+      }
+
+      async function syncPullGist() {
+        const token = $('syncTokenInput').value.trim();
+        const gistId = $('syncGistIdInput').value.trim();
+        if (!token || !gistId) return showToast('請輸入 GitHub Token 與 Gist ID');
+        saveSyncConfig();
+        $('syncStatusText').textContent = '正在從雲端下載...';
+        try {
+          const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
+            headers: {
+              Authorization: `token ${token}`,
+              Accept: 'application/vnd.github+json'
+            }
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const gist = await res.json();
+          const fileObj = gist.files && gist.files['ai_works_hub_sync.json'];
+          if (!fileObj) throw new Error('找不到同步檔');
+          let raw = fileObj.content;
+          if (fileObj.truncated && fileObj.raw_url) {
+            const r2 = await fetch(fileObj.raw_url);
+            raw = await r2.text();
+          }
+          const count = await mergeBackupData(JSON.parse(raw));
+          const ts = nowLabel();
+          try { localStorage.setItem('ai_hub_gh_last', ts); } catch (e) {}
+          $('syncStatusText').textContent = '上次還原：' + ts;
+          showToast(`⬇️ 已從雲端同步 ${count} 個作品`);
+        } catch (err) {
+          $('syncStatusText').textContent = '下載失敗，請檢查 Gist ID 與 Token';
+          showToast('雲端同步下載失敗');
+        }
+      }
+
+      // Copy fallback
+      function copyText(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(() => showToast('已複製程式碼'), () => fallbackCopy(text));
+        } else {
+          fallbackCopy(text);
+        }
+      }
+
+      function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); showToast('已複製程式碼'); } catch (e) { showToast('無法複製，請手動選取'); }
+        ta.remove();
+      }
+
+      function bindEmojiContainer(el) {
+        el.addEventListener('click', (e) => {
+          const opt = e.target.closest('.emoji-opt');
+          if (!opt) return;
+          el.querySelectorAll('.emoji-opt').forEach((o) => o.classList.remove('selected'));
+          opt.classList.add('selected');
+        });
+      }
+
+      function bindEvents() {
+        $('classroomToggleBtn').addEventListener('click', () => {
+          applyClassroomMode(!classroomMode);
+          showToast(classroomMode ? '🎓 已開啟課堂模式（已隱藏私人遊戲）' : '已退出課堂模式');
+        });
+
+        $('exitClassroomBtn').addEventListener('click', () => {
+          applyClassroomMode(false);
+          showToast('已退出課堂模式');
+        });
+
+        $('themeToggleBtn').addEventListener('click', () => {
+          const cur = document.documentElement.getAttribute('data-theme') || 'light';
+          applyTheme(cur === 'dark' ? 'light' : 'dark');
+        });
+
+        $('viewModeBtn').addEventListener('click', () => applyViewMode(viewMode === 'grid' ? 'list' : 'grid'));
+
+        $('batchToggleBtn').addEventListener('click', () => {
+          batchMode = !batchMode;
+          selectedBatchIds.clear();
+          renderCards();
+        });
+
+        $('batchCancelBtn').addEventListener('click', () => {
+          batchMode = false;
+          selectedBatchIds.clear();
+          renderCards();
+        });
+
+        $('batchSelectAllBtn').addEventListener('click', () => {
+          const list = getFilteredWorks();
+          if (selectedBatchIds.size === list.length) selectedBatchIds.clear();
+          else list.forEach((w) => selectedBatchIds.add(w.id));
+          renderCards();
+        });
+
+        $('batchMoveBtn').addEventListener('click', async () => {
+          if (selectedBatchIds.size === 0) return showToast('請先勾選要搬移的作品');
+          const targetFolder = $('batchFolderSelect').value;
+          for (const id of selectedBatchIds) {
+            const w = works.find((x) => x.id === id);
+            if (w) { w.folderId = targetFolder; await dbPut(STORE_WORKS, w); }
+          }
+          const moved = selectedBatchIds.size;
+          selectedBatchIds.clear();
+          batchMode = false;
+          renderAll();
+          showToast(`已將 ${moved} 個作品移至「${getFolderById(targetFolder).name}」`);
+        });
+
+        $('batchDeleteBtn').addEventListener('click', () => {
+          if (selectedBatchIds.size === 0) return showToast('請先勾選要刪除的作品');
+          const count = selectedBatchIds.size;
+          askConfirm('批次刪除', `確定要從作品館移除所選的 ${count} 個作品嗎？`, async () => {
+            for (const id of selectedBatchIds) await dbDelete(STORE_WORKS, id);
+            works = works.filter((w) => !selectedBatchIds.has(w.id));
+            selectedBatchIds.clear();
+            batchMode = false;
+            renderAll();
+            showToast(`已移除 ${count} 個作品`);
+          });
+        });
+
+        $('quickStrip').addEventListener('click', (e) => {
+          const chip = e.target.closest('[data-quick-id]');
+          if (chip) openWork(chip.getAttribute('data-quick-id'));
+        });
+
+        $('folderBar').addEventListener('click', (e) => {
+          if (e.target.closest('#inlineAddFolderBtn')) return openFolderModal();
+          const chip = e.target.closest('.folder-chip');
+          if (!chip) return;
+          activeFolder = chip.getAttribute('data-folder');
+          renderAll();
+        });
+
+        $('quickTagBar').addEventListener('click', (e) => {
+          const pill = e.target.closest('[data-qtag]');
+          if (!pill) return;
+          activeQuickTag = pill.getAttribute('data-qtag');
+          renderAll();
+        });
+
+        // Import Modal
+        $('openImportBtn').addEventListener('click', openImportModal);
+        $('emptyAddBtn').addEventListener('click', openImportModal);
+        $('closeImportBtn').addEventListener('click', closeImportModal);
+        $('cancelImportBtn').addEventListener('click', closeImportModal);
+        $('confirmImportBtn').addEventListener('click', commitStagedFiles);
+        $('confirmWebBtn').addEventListener('click', commitWebLink);
+
+        document.querySelectorAll('.modal-tab').forEach((tab) => {
+          tab.addEventListener('click', () => switchImportTab(tab.getAttribute('data-import-tab')));
+        });
+
+        document.querySelectorAll('[data-classify]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-classify]').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            classifyMode = btn.getAttribute('data-classify');
+            $('manualClassifyFields').classList.toggle('visible', classifyMode === 'manual');
+            if (classifyMode === 'manual' && stagedFiles.length > 0) {
+              const fId = $('manualFolderSelect').value;
+              const cat = $('manualCatSelect').value;
+              stagedFiles.forEach((s) => { s.folderId = fId; s.category = cat; });
+              renderStagedList();
+            }
+          });
+        });
+
+        $('manualFolderSelect').addEventListener('change', () => {
+          if (classifyMode === 'manual' && stagedFiles.length > 0) {
+            stagedFiles.forEach((s) => { s.folderId = $('manualFolderSelect').value; });
+            renderStagedList();
+          }
+        });
+
+        $('manualCatSelect').addEventListener('change', () => {
+          if (classifyMode === 'manual' && stagedFiles.length > 0) {
+            stagedFiles.forEach((s) => { s.category = $('manualCatSelect').value; });
+            renderStagedList();
+          }
+        });
+
+        $('pickFilesBtn').addEventListener('click', () => $('filePickerInput').click());
+        $('pickFolderBtn').addEventListener('click', () => $('folderPickerInput').click());
+        $('filePickerInput').addEventListener('change', (e) => handleIncomingFileList(e.target.files));
+        $('folderPickerInput').addEventListener('change', (e) => handleIncomingFileList(e.target.files));
+
+        $('stagedList').addEventListener('change', (e) => {
+          const idxAttr = e.target.getAttribute('data-staged-idx');
+          if (idxAttr !== null) {
+            stagedFiles[Number(idxAttr)].selected = e.target.checked;
+            renderStagedList();
+          }
+          const fAttr = e.target.getAttribute('data-staged-folder');
+          if (fAttr !== null) stagedFiles[Number(fAttr)].folderId = e.target.value;
+          const catAttr = e.target.getAttribute('data-staged-cat');
+          if (catAttr !== null) stagedFiles[Number(catAttr)].category = e.target.value;
+        });
+
+        $('toggleAllStagedBtn').addEventListener('click', () => {
+          const allSelected = stagedFiles.every((s) => s.selected);
+          stagedFiles.forEach((s) => (s.selected = !allSelected));
+          renderStagedList();
+        });
+
+        // Folder Modal
+        $('closeFolderModalBtn').addEventListener('click', () => $('folderModal').classList.remove('open'));
+        $('doneFolderModalBtn').addEventListener('click', () => $('folderModal').classList.remove('open'));
+        $('createFolderSubmitBtn').addEventListener('click', createNewFolder);
+        $('folderColorPicker').addEventListener('click', (e) => {
+          const dot = e.target.closest('.color-dot');
+          if (!dot) return;
+          $('folderColorPicker').querySelectorAll('.color-dot').forEach((d) => d.classList.remove('selected'));
+          dot.classList.add('selected');
+        });
+        $('folderMgrList').addEventListener('click', async (e) => {
+          const btn = e.target.closest('[data-del-folder]');
+          if (!btn) return;
+          const fId = btn.getAttribute('data-del-folder');
+          const f = folders.find((x) => x.id === fId);
+          if (!f) return;
+          folders = folders.filter((x) => x.id !== fId);
+          await dbDelete(STORE_FOLDERS, fId);
+          for (const w of works) {
+            if (w.folderId === fId) { w.folderId = 'f_other'; await dbPut(STORE_WORKS, w); }
+          }
+          if (activeFolder === fId) activeFolder = 'all';
+          renderFolderMgrList();
+          renderAll();
+          showToast(`已刪除資料夾「${f.name}」`);
+        });
+
+        // Search, Type, Sort, Category
+        $('searchInput').addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          $('searchClearBtn').classList.toggle('visible', searchQuery.length > 0);
+          renderCards();
+        });
+
+        $('searchClearBtn').addEventListener('click', () => {
+          searchQuery = '';
+          $('searchInput').value = '';
+          $('searchClearBtn').classList.remove('visible');
+          renderCards();
+        });
+
+        document.querySelectorAll('[data-type]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('[data-type]').forEach((b) => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeType = btn.getAttribute('data-type');
+            renderCards();
+          });
+        });
+
+        $('sortSelect').addEventListener('change', (e) => { sortBy = e.target.value; renderCards(); });
+
+        $('categoryBar').addEventListener('click', (e) => {
+          const pill = e.target.closest('.cat-pill');
+          if (!pill) return;
+          activeCategory = pill.getAttribute('data-cat');
+          renderAll();
+        });
+
+        $('emptyResetBtn').addEventListener('click', () => {
+          searchQuery = '';
+          $('searchInput').value = '';
+          $('searchClearBtn').classList.remove('visible');
+          activeFolder = 'all';
+          activeCategory = 'all';
+          activeQuickTag = 'all';
+          activeType = 'all';
+          document.querySelectorAll('[data-type]').forEach((b) => b.classList.toggle('active', b.getAttribute('data-type') === 'all'));
+          renderAll();
+        });
+
+        // Cards
+        $('cardsGrid').addEventListener('click', async (e) => {
+          const cb = e.target.closest('.batch-check');
+          if (cb) {
+            e.stopPropagation();
+            const id = cb.getAttribute('data-batch-id');
+            if (cb.checked) selectedBatchIds.add(id);
+            else selectedBatchIds.delete(id);
+            renderCards();
+            return;
+          }
+          const btn = e.target.closest('[data-action]');
+          if (btn) {
+            e.stopPropagation();
+            const action = btn.getAttribute('data-action');
+            const id = btn.getAttribute('data-id');
+            if (action === 'fav') {
+              const w = works.find((x) => x.id === id);
+              if (w) { w.favorite = !w.favorite; await dbPut(STORE_WORKS, w); renderAll(); }
+            } else if (action === 'edit') {
+              openEditModal(id);
+            }
+            return;
+          }
+          const card = e.target.closest('.card');
+          if (!card) return;
+          const id = card.getAttribute('data-id');
+          if (batchMode) {
+            if (selectedBatchIds.has(id)) selectedBatchIds.delete(id);
+            else selectedBatchIds.add(id);
+            renderCards();
+          } else {
+            openWork(id);
+          }
+        });
+
+        $('cardsGrid').addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            const card = e.target.closest('.card');
+            if (card && e.target === card) { e.preventDefault(); openWork(card.getAttribute('data-id')); }
+          }
+        });
+
+        // Edit Modal
+        $('closeEditBtn').addEventListener('click', closeEditModal);
+        $('cancelEditBtn').addEventListener('click', closeEditModal);
+        $('saveEditBtn').addEventListener('click', saveEdit);
+        bindEmojiContainer($('emojiPicker'));
+        bindEmojiContainer($('webEmojiPicker'));
+        bindEmojiContainer($('folderEmojiPicker'));
+
+        $('editPresetGradeTags').addEventListener('click', (e) => {
+          const btn = e.target.closest('.preset-tag-btn');
+          if (btn) btn.classList.toggle('active');
+        });
+
+        $('addChangelogBtn').addEventListener('click', async () => {
+          const w = works.find((item) => item.id === editingId);
+          const noteText = $('newChangelogInput').value.trim();
+          if (!w || !noteText) return showToast('請輸入更新說明');
+          const ver = $('editVersionInput').value.trim() || bumpVersion(w.version);
+          if (!Array.isArray(w.history)) w.history = [];
+          w.history.unshift({ version: ver, date: nowLabel(), note: noteText });
+          w.version = ver;
+          await dbPut(STORE_WORKS, w);
+          $('newChangelogInput').value = '';
+          renderEditHistory(w);
+          renderCards();
+          showToast('已新增版本紀錄');
+        });
+
+        $('deleteFromEditBtn').addEventListener('click', () => {
+          const w = works.find((item) => item.id === editingId);
+          if (!w) return;
+          const targetId = w.id;
+          const targetName = w.filename;
+          closeEditModal();
+          askConfirm('刪除作品', `確定要從作品館移除「${targetName}」嗎？`, async () => {
+            works = works.filter((item) => item.id !== targetId);
+            await dbDelete(STORE_WORKS, targetId);
+            renderAll();
+            showToast(`已移除 ${targetName}`);
+          });
+        });
+
+        // Confirm Modal
+        $('closeConfirmBtn').addEventListener('click', closeConfirm);
+        $('cancelConfirmBtn').addEventListener('click', closeConfirm);
+        $('okConfirmBtn').addEventListener('click', async () => {
+          const fn = pendingConfirmAction;
+          closeConfirm();
+          if (fn) await fn();
+        });
+
+        // Demo Banner
+        $('clearDemoBtn').addEventListener('click', async () => {
+          const demos = works.filter((w) => w.isDemo);
+          for (const d of demos) await dbDelete(STORE_WORKS, d.id);
+          works = works.filter((w) => !w.isDemo);
+          try { localStorage.setItem('ai_hub_demo_dismissed', '1'); } catch (e) {}
+          renderAll();
+          showToast('已清除示範項目');
+        });
+
+        // Settings & Sync
+        $('settingsBtn').addEventListener('click', () => {
+          loadSyncConfig();
+          $('settingsModal').classList.add('open');
+        });
+        $('closeSettingsBtn').addEventListener('click', () => $('settingsModal').classList.remove('open'));
+        $('doneSettingsBtn').addEventListener('click', () => $('settingsModal').classList.remove('open'));
+        $('openFolderMgrFromSettingsBtn').addEventListener('click', () => {
+          $('settingsModal').classList.remove('open');
+          openFolderModal();
+        });
+        $('exportBackupBtn').addEventListener('click', exportBackup);
+        $('importBackupBtn').addEventListener('click', () => $('backupImportInput').click());
+        $('backupImportInput').addEventListener('change', (e) => {
+          importBackupFile(e.target.files[0]);
+          e.target.value = '';
+        });
+        $('syncPushBtn').addEventListener('click', syncPushGist);
+        $('syncPullBtn').addEventListener('click', syncPullGist);
+
+        $('restoreDemoBtn').addEventListener('click', async () => {
+          for (const d of DEMO_WORKS) {
+            if (!works.some((w) => w.id === d.id)) {
+              works.push({ ...d });
+              await dbPut(STORE_WORKS, { ...d });
+            }
+          }
+          $('settingsModal').classList.remove('open');
+          renderAll();
+          showToast('已載入示範作品');
+        });
+
+        $('clearAllBtn').addEventListener('click', () => {
+          $('settingsModal').classList.remove('open');
+          askConfirm('清空全部作品', '確定要清空作品館內所有已儲存的項目嗎？建議先匯出備份。', async () => {
+            works = [];
+            await dbClear(STORE_WORKS);
+            try { localStorage.setItem('ai_hub_demo_dismissed', '1'); } catch (e) {}
+            renderAll();
+            showToast('已清空全部作品');
+          });
+        });
+
+        // Runner & Viewer
+        $('closeHtmlRunnerBtn').addEventListener('click', closeHtmlRunner);
+        $('openNewTabBtn').addEventListener('click', () => {
+          const url = currentExternalUrl || currentBlobUrl;
+          if (url) window.open(url, '_blank', 'noopener');
+        });
+
+        $('closePyViewerBtn').addEventListener('click', closePyViewer);
+        $('copyPyBtn').addEventListener('click', () => { if (currentPyWork) copyText(currentPyWork.content || ''); });
+        $('downloadPyBtn').addEventListener('click', () => {
+          if (!currentPyWork) return;
+          const blob = new Blob([currentPyWork.content || ''], { type: 'text/x-python;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = currentPyWork.filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast('已開始下載 ' + currentPyWork.filename);
+        });
+
+        ['importModal', 'folderModal', 'editModal', 'confirmModal', 'settingsModal'].forEach((id) => {
+          $(id).addEventListener('click', (e) => { if (e.target === $(id)) $(id).classList.remove('open'); });
+        });
+
+        // Drag & Drop
+        let dragCounter = 0;
+        window.addEventListener('dragenter', (e) => { e.preventDefault(); dragCounter++; $('dropOverlay').classList.add('visible'); });
+        window.addEventListener('dragleave', (e) => { e.preventDefault(); dragCounter = Math.max(0, dragCounter - 1); if (dragCounter === 0) $('dropOverlay').classList.remove('visible'); });
+        window.addEventListener('dragover', (e) => e.preventDefault());
+        window.addEventListener('drop', (e) => {
+          e.preventDefault();
+          dragCounter = 0;
+          $('dropOverlay').classList.remove('visible');
+          if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) handleIncomingFileList(e.dataTransfer.files);
+        });
+      }
+
+      async function init() {
+        let savedTheme = 'light';
+        let savedView = 'grid';
+        let savedClass = false;
+        try {
+          savedTheme = localStorage.getItem('ai_hub_theme') || 'light';
+          savedView = localStorage.getItem('ai_hub_view') || 'grid';
+          savedClass = localStorage.getItem('ai_hub_classroom') === '1';
+        } catch (e) {}
+        applyTheme(savedTheme);
+        applyViewMode(savedView);
+        bindEvents();
+
+        db = await openDB();
+        const storedFolders = await dbGetAll(STORE_FOLDERS);
+        if (storedFolders && storedFolders.length > 0) {
+          folders = storedFolders;
+        } else {
+          folders = DEFAULT_FOLDERS.map((f) => ({ ...f }));
+          for (const f of folders) await dbPut(STORE_FOLDERS, f);
+        }
+
+        const storedWorks = await dbGetAll(STORE_WORKS);
+        if (storedWorks && storedWorks.length > 0) {
+          works = storedWorks.map((w) => ({
+            ...w,
+            folderId: w.folderId || 'f_other',
+            version: w.version || 'v1.0',
+            tags: Array.isArray(w.tags) ? w.tags : [],
+            history: Array.isArray(w.history) ? w.history : []
+          }));
+        } else {
+          let dismissed = false;
+          try { dismissed = localStorage.getItem('ai_hub_demo_dismissed') === '1'; } catch (e) {}
+          if (!dismissed) {
+            works = DEMO_WORKS.map((d) => ({ ...d }));
+            for (const d of works) await dbPut(STORE_WORKS, d);
+          }
+        }
+        applyClassroomMode(savedClass);
+      }
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js').catch(() => {});
+        });
+      }
+      init();
+    })();
+  </script>
+</body>
+</html>
