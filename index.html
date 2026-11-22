@@ -616,8 +616,8 @@
     }
 
     .card-head { flex: 1; min-width: 0; }
-    .card-title-row { display: flex; align-items: center; gap: 6px; }
-    .card-title { margin: 0; font-size: 0.99rem; font-weight: 700; color: var(--text); line-height: 1.3; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .card-title-row { display: flex; align-items: flex-start; gap: 6px; flex-wrap: wrap; }
+    .card-title { margin: 0; font-size: 0.98rem; font-weight: 700; color: var(--text); line-height: 1.4; white-space: normal; word-break: break-word; overflow: visible; }
 
     .ver-chip {
       font-family: var(--mono);
@@ -721,13 +721,18 @@
     .cat-tag { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); background: var(--surface-2); padding: 2px 7px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; }
     .open-hint { font-size: 0.76rem; font-weight: 600; color: var(--primary); display: inline-flex; align-items: center; gap: 3px; flex-shrink: 0; }
 
-    /* Compact List View */
-    .grid.list-view .card { flex-direction: row; align-items: center; padding: 11px 14px; gap: 12px; }
-    .grid.list-view .card-top { flex: 1; min-width: 0; }
-    .grid.list-view .card-avatar { width: 38px; height: 38px; font-size: 1.2rem; }
-    .grid.list-view .card-filename-row { margin-top: 0; flex-shrink: 0; }
-    .grid.list-view .card-note, .grid.list-view .open-hint, .grid.list-view .card-tags-line { display: none; }
-    .grid.list-view .card-footer { margin-top: 0; padding-top: 0; border-top: none; flex-shrink: 0; }
+    /* Compact List View — 2-row clear layout so full title & full filename are ALWAYS 100% visible */
+    .grid.list-view .card { flex-direction: column; align-items: stretch; padding: 12px 15px; gap: 8px; }
+    .grid.list-view .card-top { align-items: flex-start; gap: 10px; }
+    .grid.list-view .card-avatar { width: 36px; height: 36px; font-size: 1.15rem; margin-top: 1px; }
+    .grid.list-view .card-filename-row { margin-top: 0; padding-left: 46px; }
+    .grid.list-view .card-note, .grid.list-view .open-hint { display: none; }
+    .grid.list-view .card-tags-line { padding-left: 46px; }
+    .grid.list-view .card-footer { margin-top: 0; padding-top: 6px; padding-left: 46px; border-top: 1px dashed var(--border); }
+    .folder-mgr-actions { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+    .order-btn { width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.78rem; font-weight: 700; }
+    .order-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+    .order-btn:disabled { opacity: 0.35; cursor: not-allowed; }
 
     /* Empty State */
     .empty-state {
@@ -960,7 +965,7 @@
       .container { padding: 13px 13px 64px; }
       .picker-grid, .form-2col, .manual-fields { grid-template-columns: 1fr; }
       .grid { grid-template-columns: 1fr; }
-      .grid.list-view .card { flex-direction: column; align-items: stretch; }
+      .grid.list-view .card-filename-row, .grid.list-view .card-tags-line, .grid.list-view .card-footer { padding-left: 0; }
       .viewer-actions .hide-sm { display: none; }
     }
   </style>
@@ -1214,23 +1219,48 @@
           </div>
         </div>
 
-        <!-- Tab 2: Web URL -->
+        <!-- Tab 2: Web URL (Single + Batch Multi-URL Import) -->
         <div id="importTabWeb" style="display:none; flex-direction:column; gap:11px;">
-          <div class="field">
-            <label for="webUrlInput">網頁網址 (URL)</label>
-            <input type="url" id="webUrlInput" placeholder="https://your-site.netlify.app/ 或常用 AI 網頁" />
+          <div class="classify-row">
+            <label style="font-size:0.81rem; font-weight:700; color:var(--text-secondary);">新增方式</label>
+            <div class="segmented" style="height:34px;">
+              <button type="button" class="seg-btn active" data-web-mode="single">單筆新增</button>
+              <button type="button" class="seg-btn" data-web-mode="batch">📋 批量匯入多個網址</button>
+            </div>
           </div>
-          <div class="field">
-            <label for="webTitleInput">作品名稱</label>
-            <input type="text" id="webTitleInput" placeholder="例如：F.5 電解互動平台（線上版）" />
+
+          <div id="webSingleFields" style="display:flex; flex-direction:column; gap:10px;">
+            <div class="field">
+              <label for="webUrlInput">網頁網址 (URL)</label>
+              <input type="url" id="webUrlInput" placeholder="https://your-site.netlify.app/ 或常用 AI 網頁" />
+            </div>
+            <div class="field">
+              <label for="webTitleInput">作品名稱</label>
+              <input type="text" id="webTitleInput" placeholder="例如：F.5 電解互動平台（線上版）" />
+            </div>
           </div>
+
+          <div id="webBatchFields" style="display:none; flex-direction:column; gap:8px;">
+            <div class="field">
+              <label for="webBatchTextarea">一次貼上多個名稱與網址（每行一項，支援「名稱 | 網址」、逗號、空格或直接從 Excel 貼上兩欄）</label>
+              <textarea id="webBatchTextarea" rows="5" placeholder="例如：&#10;F.5 電解互動平台 | https://demo1.netlify.app&#10;F.4 酸鹼滴定實驗, https://demo2.netlify.app&#10;Pokémon 屬性表 https://demo3.netlify.app&#10;https://phet.colorado.edu/"></textarea>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.79rem; color:var(--text-muted);">
+              <span id="webBatchCountInfo">尚未偵測到網址</span>
+              <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer; font-weight:600; color:var(--text-secondary);">
+                <input type="checkbox" id="webBatchAutoClassify" checked style="accent-color:var(--primary);" />
+                依名稱智能建議分類與圖示
+              </label>
+            </div>
+          </div>
+
           <div class="form-2col">
             <div class="field">
-              <label for="webFolderSelect">所屬資料夾</label>
+              <label for="webFolderSelect">預設資料夾</label>
               <select id="webFolderSelect"></select>
             </div>
             <div class="field">
-              <label for="webCatSelect">主題標籤</label>
+              <label for="webCatSelect">預設主題標籤</label>
               <select id="webCatSelect"></select>
             </div>
           </div>
@@ -1251,11 +1281,11 @@
             <input type="checkbox" id="webTeachingCheck" />
             <span>🎓 標記為課堂教學用（在課堂模式下顯示）</span>
           </label>
-          <div class="field">
+          <div class="field" id="webNoteFieldWrap">
             <label for="webNoteInput">簡短備註（選填）</label>
             <input type="text" id="webNoteInput" placeholder="例如：課堂投影示範用" />
           </div>
-          <div class="field">
+          <div class="field" id="webEmojiFieldWrap">
             <label>代表性圖示</label>
             <div class="emoji-row" id="webEmojiPicker"></div>
           </div>
@@ -1273,7 +1303,7 @@
   <div class="modal-backdrop" id="folderModal" role="dialog" aria-modal="true" aria-labelledby="folderModalTitle">
     <div class="modal" style="max-width:460px;">
       <div class="modal-header">
-        <h3 id="folderModalTitle">新增或管理資料夾</h3>
+        <h3 id="folderModalTitle">管理資料夾與調整次序</h3>
         <button class="mini-btn" id="closeFolderModalBtn" aria-label="關閉">✕</button>
       </div>
       <div class="modal-body">
@@ -1292,7 +1322,7 @@
         <button type="button" class="btn-primary" id="createFolderSubmitBtn" style="width:100%;">+ 建立資料夾</button>
 
         <div class="field" style="margin-top:6px;">
-          <label>現有資料夾</label>
+          <label>現有資料夾（可按 ↑ ↓ 手動調前／調後次序）</label>
           <div class="folder-mgr-list" id="folderMgrList"></div>
         </div>
       </div>
@@ -1376,6 +1406,30 @@
           <button type="button" class="btn-secondary" id="cancelEditBtn">取消</button>
           <button type="button" class="btn-primary" id="saveEditBtn">儲存</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Rename Modal (Pencil Button) -->
+  <div class="modal-backdrop" id="renameModal" role="dialog" aria-modal="true" aria-labelledby="renameModalTitle">
+    <div class="modal" style="max-width:440px;">
+      <div class="modal-header">
+        <h3 id="renameModalTitle">✏️ 修改作品名稱</h3>
+        <button class="mini-btn" id="closeRenameBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label>原始檔名</label>
+          <div class="filename-badge" id="renameFilenamePreview">example.html</div>
+        </div>
+        <div class="field">
+          <label for="quickRenameInput">顯示名稱</label>
+          <input type="text" id="quickRenameInput" placeholder="輸入清晰易認的名稱..." />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelRenameBtn">取消</button>
+        <button type="button" class="btn-primary" id="saveRenameBtn">儲存名稱</button>
       </div>
     </div>
   </div>
@@ -1530,12 +1584,12 @@
       const FOLDER_COLORS = ['#2563eb', '#0d9488', '#7c3aed', '#ea580c', '#e11d48', '#ca8a04', '#475569'];
 
       const DEFAULT_FOLDERS = [
-        { id: 'f_chem', name: '化學互動平台', icon: '🧪', color: '#0d9488' },
-        { id: 'f_games', name: '親子桌遊', icon: '🎲', color: '#ea580c' },
-        { id: 'f_pokemon', name: 'Pokémon 專區', icon: '⚡', color: '#ca8a04' },
-        { id: 'f_tools', name: '實用工具', icon: '🛠️', color: '#2563eb' },
-        { id: 'f_web', name: '線上網頁', icon: '🌐', color: '#7c3aed' },
-        { id: 'f_other', name: '未分類', icon: '📁', color: '#475569' }
+        { id: 'f_chem', name: '化學互動平台', icon: '🧪', color: '#0d9488', order: 0 },
+        { id: 'f_games', name: '親子桌遊', icon: '🎲', color: '#ea580c', order: 1 },
+        { id: 'f_pokemon', name: 'Pokémon 專區', icon: '⚡', color: '#ca8a04', order: 2 },
+        { id: 'f_tools', name: '實用工具', icon: '🛠️', color: '#2563eb', order: 3 },
+        { id: 'f_web', name: '線上網頁', icon: '🌐', color: '#7c3aed', order: 4 },
+        { id: 'f_other', name: '未分類', icon: '📁', color: '#475569', order: 5 }
       ];
 
       let db = null;
@@ -1553,8 +1607,10 @@
       let batchMode = false;
       let selectedBatchIds = new Set();
       let importTab = 'files';
+      let webImportMode = 'single';
       let classifyMode = 'auto';
       let editingId = null;
+      let renamingId = null;
       let pendingConfirmAction = null;
       let currentExternalUrl = null;
       let currentBlobUrl = null;
@@ -1947,7 +2003,7 @@
               `<span class="f-num">${cnt}</span></button>`;
           })
           .join('');
-        const addBtn = `<button type="button" class="folder-add-btn" id="inlineAddFolderBtn">+ 新增資料夾</button>`;
+        const addBtn = `<button type="button" class="folder-add-btn" id="inlineAddFolderBtn">+ 新增 / 調次序</button>`;
         bar.innerHTML = allBtn + folderBtns + addBtn;
         populateFolderSelect($('batchFolderSelect'), folders[0] ? folders[0].id : 'f_other');
       }
@@ -2046,10 +2102,13 @@
                     </div>
                   </div>
                   <div class="card-actions">
+                    <button type="button" class="mini-btn" data-action="rename" data-id="${escapeHtml(w.id)}" title="快速修改名稱" aria-label="修改名稱">
+                      ✏️
+                    </button>
                     <button type="button" class="mini-btn ${w.favorite ? 'fav-active' : ''}" data-action="fav" data-id="${escapeHtml(w.id)}" title="常用釘選" aria-label="常用">
                       ${w.favorite ? '★' : '☆'}
                     </button>
-                    <button type="button" class="mini-btn" data-action="edit" data-id="${escapeHtml(w.id)}" title="編輯、標籤與版本紀錄" aria-label="編輯">
+                    <button type="button" class="mini-btn" data-action="edit" data-id="${escapeHtml(w.id)}" title="詳細編輯、標籤與版本紀錄" aria-label="詳細編輯">
                       ⋯
                     </button>
                   </div>
@@ -2181,10 +2240,12 @@
         renderEmojiPicker($('webEmojiPicker'), '🌐');
         $('webUrlInput').value = '';
         $('webTitleInput').value = '';
+        $('webBatchTextarea').value = '';
         $('webTagsInput').value = '';
         $('webTeachingCheck').checked = classroomMode;
         $('webNoteInput').value = '';
         $('importUpdateNoteInput').value = '';
+        switchWebImportMode('single');
         switchImportTab('files');
         $('importModal').classList.add('open');
       }
@@ -2353,31 +2414,157 @@
         showToast(updated > 0 ? `已新增 ${added} 個並更新 ${updated} 個版本` : `成功加入 ${added} 個作品`);
       }
 
+      function switchWebImportMode(mode) {
+        webImportMode = mode;
+        document.querySelectorAll('[data-web-mode]').forEach((b) => {
+          b.classList.toggle('active', b.getAttribute('data-web-mode') === mode);
+        });
+        $('webSingleFields').style.display = mode === 'single' ? 'flex' : 'none';
+        $('webBatchFields').style.display = mode === 'batch' ? 'flex' : 'none';
+        $('webNoteFieldWrap').style.display = mode === 'single' ? 'flex' : 'none';
+        updateBatchWebPreview();
+      }
+
+      function parseBatchWebLines(rawText) {
+        const lines = String(rawText || '').split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+        const parsed = [];
+        for (const line of lines) {
+          let title = '';
+          let url = '';
+          // Match explicit http(s):// URL anywhere in the line
+          const urlMatch = line.match(/(https?:\/\/[^\s,，|｜\t]+)/i);
+          if (urlMatch) {
+            url = urlMatch[1].trim();
+            title = line.replace(urlMatch[0], '').replace(/[|｜,，\t]+/g, ' ').replace(/^[-•*\d.\s]+/, '').trim();
+          } else {
+            // Support separator format like "名稱 | example.com" or "名稱, example.com" or tab-separated
+            const parts = line.split(/[|｜\t,，]/).map((p) => p.trim()).filter(Boolean);
+            if (parts.length >= 2) {
+              const last = parts[parts.length - 1];
+              const first = parts[0];
+              if (/\.[a-z]{2,}/i.test(last)) {
+                url = last;
+                title = parts.slice(0, -1).join(' ');
+              } else if (/\.[a-z]{2,}/i.test(first)) {
+                url = first;
+                title = parts.slice(1).join(' ');
+              }
+            } else if (/^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(line)) {
+              url = line;
+            }
+          }
+          if (!url) continue;
+          if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+          const cleanLabel = cleanUrlLabel(url);
+          parsed.push({ title: title || cleanLabel, url, cleanLabel });
+        }
+        return parsed;
+      }
+
+      function updateBatchWebPreview() {
+        const btn = $('confirmWebBtn');
+        if (webImportMode === 'single') {
+          btn.textContent = '加入網頁';
+          return;
+        }
+        const items = parseBatchWebLines($('webBatchTextarea').value);
+        $('webBatchCountInfo').textContent = items.length > 0
+          ? `✅ 已偵測到 ${items.length} 個有效網址`
+          : '尚未偵測到網址（每行輸入「名稱 | 網址」或直接貼上網址）';
+        btn.textContent = items.length > 0 ? `批量加入網頁 (${items.length})` : '批量加入網頁';
+      }
+
       async function commitWebLink() {
+        const selEmoji = $('webEmojiPicker').querySelector('.emoji-opt.selected');
+        const defaultIcon = selEmoji ? selEmoji.getAttribute('data-emoji') : '🌐';
+        const baseTags = $('webTagsInput').value.split(/[,，]/).map((t) => t.trim()).filter(Boolean);
+        const defaultFolder = $('webFolderSelect').value;
+        const defaultCat = $('webCatSelect').value;
+        const openMode = $('webOpenModeSelect').value;
+        const forceTeaching = $('webTeachingCheck').checked;
+
+        if (webImportMode === 'batch') {
+          const items = parseBatchWebLines($('webBatchTextarea').value);
+          if (items.length === 0) return showToast('請輸入至少一個有效網址');
+          const autoClassify = $('webBatchAutoClassify').checked;
+          let added = 0;
+          let updated = 0;
+
+          for (const entry of items) {
+            const guess = autoClassify ? inferSuggestion(entry.cleanLabel, entry.title, '', 'web') : null;
+            const folderId = guess && guess.folderId !== 'f_other' ? guess.folderId : defaultFolder;
+            const category = guess && guess.category !== '其他' ? guess.category : defaultCat;
+            const icon = guess ? guess.icon : defaultIcon;
+            const tags = Array.from(new Set([...baseTags, ...(guess ? guess.tags : [])]));
+            const isTeaching = forceTeaching || category === '化學教學' || (guess ? guess.isTeaching : false);
+
+            const existing = works.find((w) => w.type === 'web' && (w.url || '').toLowerCase() === entry.url.toLowerCase() && !w.isDemo);
+            if (existing) {
+              existing.title = entry.title;
+              existing.folderId = folderId;
+              existing.category = category;
+              existing.tags = Array.from(new Set([...(existing.tags || []), ...tags]));
+              existing.isTeaching = existing.isTeaching || isTeaching;
+              existing.addedAt = Date.now();
+              await dbPut(STORE_WORKS, existing);
+              updated++;
+            } else {
+              const item = {
+                id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+                title: entry.title,
+                filename: entry.cleanLabel,
+                url: entry.url,
+                openMode,
+                path: entry.url,
+                type: 'web',
+                folderId,
+                category,
+                isTeaching,
+                tags,
+                version: 'v1.0',
+                history: [{ version: 'v1.0', date: nowLabel(), note: '批量匯入網頁捷徑' }],
+                icon,
+                note: '',
+                favorite: false,
+                isDemo: false,
+                size: 0,
+                addedAt: Date.now() + added,
+                lastOpenedAt: Date.now() + added,
+                content: ''
+              };
+              works.unshift(item);
+              await dbPut(STORE_WORKS, item);
+              added++;
+            }
+          }
+
+          closeImportModal();
+          renderAll();
+          showToast(updated > 0 ? `已批量加入 ${added} 個並更新 ${updated} 個網頁` : `成功批量加入 ${added} 個網頁捷徑`);
+          return;
+        }
+
         let rawUrl = $('webUrlInput').value.trim();
         if (!rawUrl) return showToast('請輸入網頁網址');
         if (!/^https?:\/\//i.test(rawUrl)) rawUrl = 'https://' + rawUrl;
         const cleanLabel = cleanUrlLabel(rawUrl);
         const title = $('webTitleInput').value.trim() || cleanLabel;
-        const selEmoji = $('webEmojiPicker').querySelector('.emoji-opt.selected');
-        const icon = selEmoji ? selEmoji.getAttribute('data-emoji') : '🌐';
-        const tags = $('webTagsInput').value.split(/[,，]/).map((t) => t.trim()).filter(Boolean);
 
         const item = {
           id: 'w_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
           title,
           filename: cleanLabel,
           url: rawUrl,
-          openMode: $('webOpenModeSelect').value,
+          openMode,
           path: rawUrl,
           type: 'web',
-          folderId: $('webFolderSelect').value,
-          category: $('webCatSelect').value,
-          isTeaching: $('webTeachingCheck').checked || $('webCatSelect').value === '化學教學',
-          tags,
+          folderId: defaultFolder,
+          category: defaultCat,
+          isTeaching: forceTeaching || defaultCat === '化學教學',
+          tags: baseTags,
           version: 'v1.0',
           history: [{ version: 'v1.0', date: nowLabel(), note: '加入網頁捷徑' }],
-          icon,
+          icon: defaultIcon,
           note: $('webNoteInput').value.trim(),
           favorite: false,
           isDemo: false,
@@ -2402,19 +2589,41 @@
         $('folderModal').classList.add('open');
       }
 
+      async function persistFolderOrder() {
+        for (let i = 0; i < folders.length; i++) {
+          folders[i].order = i;
+          await dbPut(STORE_FOLDERS, folders[i]);
+        }
+      }
+
+      async function moveFolder(index, delta) {
+        const target = index + delta;
+        if (target < 0 || target >= folders.length) return;
+        const [moved] = folders.splice(index, 1);
+        folders.splice(target, 0, moved);
+        await persistFolderOrder();
+        renderFolderMgrList();
+        renderAll();
+        showToast(`已調整「${moved.name}」次序`);
+      }
+
       function renderFolderMgrList() {
         $('folderMgrList').innerHTML = folders
-          .map((f) => {
+          .map((f, idx) => {
             const cnt = works.filter((w) => w.folderId === f.id).length;
             const isDefaultOther = f.id === 'f_other';
             return `
               <div class="folder-mgr-item">
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <span style="width:10px; height:10px; border-radius:50%; background:${escapeHtml(f.color || '#2563eb')};"></span>
-                  <strong>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</strong>
-                  <span style="font-size:0.74rem; color:var(--text-muted);">(${cnt} 項)</span>
+                <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+                  <span style="width:10px; height:10px; border-radius:50%; background:${escapeHtml(f.color || '#2563eb')}; flex-shrink:0;"></span>
+                  <strong style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(f.icon)} ${escapeHtml(f.name)}</strong>
+                  <span style="font-size:0.74rem; color:var(--text-muted); flex-shrink:0;">(${cnt} 項)</span>
                 </div>
-                ${isDefaultOther ? '<span style="font-size:0.74rem; color:var(--text-muted);">預設</span>' : `<button type="button" class="demo-clear-btn" data-del-folder="${escapeHtml(f.id)}">刪除</button>`}
+                <div class="folder-mgr-actions">
+                  <button type="button" class="order-btn" data-move-folder="${idx}" data-dir="-1" ${idx === 0 ? 'disabled' : ''} title="調前一位" aria-label="調前">↑</button>
+                  <button type="button" class="order-btn" data-move-folder="${idx}" data-dir="1" ${idx === folders.length - 1 ? 'disabled' : ''} title="調後一位" aria-label="調後">↓</button>
+                  ${isDefaultOther ? '<span style="font-size:0.73rem; color:var(--text-muted); padding:0 4px;">預設</span>' : `<button type="button" class="demo-clear-btn" data-del-folder="${escapeHtml(f.id)}">刪除</button>`}
+                </div>
               </div>
             `;
           })
@@ -2430,14 +2639,44 @@
           id: 'f_' + Date.now(),
           name,
           icon: selEmoji ? selEmoji.getAttribute('data-emoji') : '📁',
-          color: selColor ? selColor.getAttribute('data-color') : FOLDER_COLORS[0]
+          color: selColor ? selColor.getAttribute('data-color') : FOLDER_COLORS[0],
+          order: folders.length
         };
         folders.splice(Math.max(0, folders.length - 1), 0, folder);
-        await dbPut(STORE_FOLDERS, folder);
+        await persistFolderOrder();
         $('newFolderNameInput').value = '';
         renderFolderMgrList();
         renderAll();
         showToast(`已建立資料夾「${name}」`);
+      }
+
+      function openRenameModal(id) {
+        const w = works.find((item) => item.id === id);
+        if (!w) return;
+        renamingId = id;
+        $('renameFilenamePreview').textContent = w.filename;
+        $('quickRenameInput').value = w.title;
+        $('renameModal').classList.add('open');
+        setTimeout(() => {
+          $('quickRenameInput').focus();
+          $('quickRenameInput').select();
+        }, 50);
+      }
+
+      function closeRenameModal() {
+        $('renameModal').classList.remove('open');
+        renamingId = null;
+      }
+
+      async function saveQuickRename() {
+        const w = works.find((item) => item.id === renamingId);
+        if (!w) return;
+        const val = $('quickRenameInput').value.trim();
+        w.title = val || w.filename;
+        await dbPut(STORE_WORKS, w);
+        closeRenameModal();
+        renderAll();
+        showToast('已更新作品名稱');
       }
 
       // Edit Modal + Version History
@@ -2553,13 +2792,21 @@
       async function mergeBackupData(data) {
         if (!data || !Array.isArray(data.works)) throw new Error('格式不正確');
         if (Array.isArray(data.folders)) {
-          for (const f of data.folders) {
+          for (let i = 0; i < data.folders.length; i++) {
+            const f = data.folders[i];
             if (!f.id || !f.name) continue;
-            if (!folders.some((x) => x.id === f.id)) {
-              folders.push(f);
-              await dbPut(STORE_FOLDERS, f);
+            const orderVal = typeof f.order === 'number' ? f.order : i;
+            const existingIdx = folders.findIndex((x) => x.id === f.id);
+            if (existingIdx >= 0) {
+              folders[existingIdx] = { ...folders[existingIdx], ...f, order: orderVal };
+              await dbPut(STORE_FOLDERS, folders[existingIdx]);
+            } else {
+              const newF = { ...f, order: orderVal };
+              folders.push(newF);
+              await dbPut(STORE_FOLDERS, newF);
             }
           }
+          folders.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
         }
         let count = 0;
         for (const item of data.works) {
@@ -2803,6 +3050,12 @@
           tab.addEventListener('click', () => switchImportTab(tab.getAttribute('data-import-tab')));
         });
 
+        document.querySelectorAll('[data-web-mode]').forEach((btn) => {
+          btn.addEventListener('click', () => switchWebImportMode(btn.getAttribute('data-web-mode')));
+        });
+
+        $('webBatchTextarea').addEventListener('input', updateBatchWebPreview);
+
         document.querySelectorAll('[data-classify]').forEach((btn) => {
           btn.addEventListener('click', () => {
             document.querySelectorAll('[data-classify]').forEach((b) => b.classList.remove('active'));
@@ -2866,6 +3119,11 @@
           dot.classList.add('selected');
         });
         $('folderMgrList').addEventListener('click', async (e) => {
+          const moveBtn = e.target.closest('[data-move-folder]');
+          if (moveBtn) {
+            await moveFolder(Number(moveBtn.getAttribute('data-move-folder')), Number(moveBtn.getAttribute('data-dir')));
+            return;
+          }
           const btn = e.target.closest('[data-del-folder]');
           if (!btn) return;
           const fId = btn.getAttribute('data-del-folder');
@@ -2873,6 +3131,7 @@
           if (!f) return;
           folders = folders.filter((x) => x.id !== fId);
           await dbDelete(STORE_FOLDERS, fId);
+          await persistFolderOrder();
           for (const w of works) {
             if (w.folderId === fId) { w.folderId = 'f_other'; await dbPut(STORE_WORKS, w); }
           }
@@ -2942,7 +3201,9 @@
             e.stopPropagation();
             const action = btn.getAttribute('data-action');
             const id = btn.getAttribute('data-id');
-            if (action === 'fav') {
+            if (action === 'rename') {
+              openRenameModal(id);
+            } else if (action === 'fav') {
               const w = works.find((x) => x.id === id);
               if (w) { w.favorite = !w.favorite; await dbPut(STORE_WORKS, w); renderAll(); }
             } else if (action === 'edit') {
@@ -3096,7 +3357,14 @@
           showToast('已開始下載 ' + currentPyWork.filename);
         });
 
-        ['importModal', 'folderModal', 'editModal', 'confirmModal', 'settingsModal'].forEach((id) => {
+        $('closeRenameBtn').addEventListener('click', closeRenameModal);
+        $('cancelRenameBtn').addEventListener('click', closeRenameModal);
+        $('saveRenameBtn').addEventListener('click', saveQuickRename);
+        $('quickRenameInput').addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') { e.preventDefault(); saveQuickRename(); }
+        });
+
+        ['importModal', 'folderModal', 'editModal', 'renameModal', 'confirmModal', 'settingsModal'].forEach((id) => {
           $(id).addEventListener('click', (e) => { if (e.target === $(id)) $(id).classList.remove('open'); });
         });
 
@@ -3129,7 +3397,7 @@
         db = await openDB();
         const storedFolders = await dbGetAll(STORE_FOLDERS);
         if (storedFolders && storedFolders.length > 0) {
-          folders = storedFolders;
+          folders = storedFolders.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
         } else {
           folders = DEFAULT_FOLDERS.map((f) => ({ ...f }));
           for (const f of folders) await dbPut(STORE_FOLDERS, f);
