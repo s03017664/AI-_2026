@@ -50,17 +50,17 @@
     }
 
     [data-theme="dark"] {
-      --bg: #0b1120;
-      --surface: #131c2e;
-      --surface-2: #1a263d;
-      --border: #233049;
-      --border-strong: #334566;
-      --text: #f1f5f9;
+      --bg: #060912;
+      --surface: #101726;
+      --surface-2: #172136;
+      --border: #1e2c46;
+      --border-strong: #2f4369;
+      --text: #f8fafc;
       --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
+      --text-muted: #8fa3bf;
       --primary: #3b82f6;
       --primary-hover: #60a5fa;
-      --primary-soft: rgba(59, 130, 246, 0.16);
+      --primary-soft: rgba(59, 130, 246, 0.2);
       --teach: #14b8a6;
       --teach-soft: rgba(20, 184, 166, 0.16);
       --teach-border: rgba(20, 184, 166, 0.35);
@@ -968,6 +968,696 @@
       .grid.list-view .card-filename-row, .grid.list-view .card-tags-line, .grid.list-view .card-footer { padding-left: 0; }
       .viewer-actions .hide-sm { display: none; }
     }
+
+    /* Top Page Switcher (作品館 / 筆記圖庫) */
+    .page-switcher-wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 12px 18px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .page-tabs {
+      display: inline-flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 4px;
+      gap: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .page-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      white-space: nowrap;
+    }
+
+    .page-tab-btn:hover { color: var(--text); background: var(--surface-2); }
+    .page-tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    }
+
+    .page-tab-count {
+      font-size: 0.72rem;
+      padding: 1px 7px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.2);
+    }
+
+    .page-tab-btn.active .page-tab-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    /* Notes Gallery View */
+    .notes-toolbar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+    }
+
+    .note-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .note-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .note-thumb-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: var(--surface-2);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .note-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .note-zoom-hint {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      background: rgba(15, 23, 42, 0.72);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .note-body {
+      padding: 12px 13px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex: 1;
+    }
+
+    .note-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .note-title {
+      margin: 0;
+      font-size: 0.93rem;
+      font-weight: 700;
+      line-height: 1.38;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .note-file {
+      font-family: var(--mono);
+      font-size: 0.71rem;
+      color: var(--text-muted);
+      word-break: break-all;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+
+    /* Fullscreen Image Lightbox */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 95;
+      background: rgba(9, 13, 24, 0.95);
+      display: none;
+      flex-direction: column;
+      color: #f8fafc;
+    }
+
+    .lightbox-overlay.open { display: flex; }
+
+    .lightbox-bar {
+      height: 56px;
+      padding: 0 14px;
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .lightbox-btn {
+      height: 34px;
+      padding: 0 11px;
+      border-radius: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .lightbox-btn:hover { background: rgba(255, 255, 255, 0.18); }
+
+    .lightbox-stage {
+      flex: 1;
+      position: relative;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      transition: transform 0.18s ease;
+      transform-origin: center center;
+      cursor: zoom-in;
+    }
+
+    .lightbox-img.zoomed {
+      max-width: none;
+      max-height: none;
+      cursor: zoom-out;
+    }
+
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(15, 23, 42, 0.7);
+      color: #ffffff;
+      font-size: 1.4rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 98;
+    }
+
+    .lightbox-nav:hover { background: rgba(37, 99, 235, 0.85); }
+    .lightbox-nav.prev { left: 14px; }
+    .lightbox-nav.next { right: 14px; }
+
+    .lightbox-footer {
+      padding: 10px 16px;
+      background: rgba(15, 23, 42, 0.9);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      flex-wrap: wrap;
+    }
+
+
+    /* v7.0 Visual Polish & Calm Hierarchy */
+    .icon-btn { position: relative; }
+    .unsynced-dot {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      border: 1.5px solid var(--surface);
+      display: none;
+    }
+    .unsynced-dot.visible { display: block; }
+
+    .quick-head-tabs {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2px;
+      border-radius: 9px;
+    }
+    .quick-tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+    .quick-tab-btn.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .results-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 0 2px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+    .results-meta-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .results-clear-link {
+      border: none;
+      background: transparent;
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .results-clear-link:hover { background: var(--primary-soft); }
+
+    .card {
+      border-radius: 18px;
+      padding: 16px 17px;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    }
+    .filename-badge {
+      cursor: copy;
+      transition: border-color 0.14s ease, background-color 0.14s ease;
+    }
+    .filename-badge:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+    .batch-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--border);
+    }
+
+
+    /* === v7.0 Adaptive Multi-Device & Fold 7 Dual-Pane Layout === */
+    .app-shell {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      min-height: calc(100vh - 64px);
+    }
+
+    .side-rail {
+      display: none;
+      width: 242px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 63px;
+      height: calc(100vh - 63px);
+      overflow-y: auto;
+      padding: 16px 14px 28px;
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      flex-direction: column;
+      gap: 16px;
+      scrollbar-width: thin;
+    }
+
+    .rail-group { display: flex; flex-direction: column; gap: 4px; }
+    .rail-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0 8px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .rail-item {
+      width: 100%;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.14s ease;
+    }
+    .rail-item:hover { background: var(--surface-2); color: var(--text); }
+    .rail-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .rail-item-left { display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .rail-count { font-size: 0.72rem; opacity: 0.75; flex-shrink: 0; }
+    .rail-grade-grid { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 4px; }
+
+    .workspace-split { flex: 1; min-width: 0; display: flex; align-items: stretch; }
+    .workspace-main { flex: 1; min-width: 0; }
+    .workspace-main .container { max-width: 1120px; padding: 16px 20px 88px; }
+
+    .split-preview-pane {
+      display: none;
+      width: 48%;
+      min-width: 360px;
+      max-width: 680px;
+      position: sticky;
+      top: 63px;
+      height: calc(100vh - 63px);
+      border-left: 1px solid var(--border);
+      background: var(--surface);
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    body.split-mode .split-preview-pane { display: flex; }
+    body.split-mode .workspace-main .grid { grid-template-columns: 1fr; }
+    body.split-mode .workspace-main .notes-grid { grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); }
+
+    .split-preview-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--surface-2);
+    }
+    .split-preview-meta { min-width: 0; }
+    .split-preview-title { font-size: 0.9rem; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .split-preview-sub { font-family: var(--mono); font-size: 0.71rem; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .split-preview-body {
+      flex: 1;
+      position: relative;
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+
+    .split-empty { margin: auto; text-align: center; padding: 32px 24px; color: var(--text-muted); max-width: 320px; }
+    .split-iframe { width: 100%; height: 100%; flex: 1; border: none; background: #ffffff; }
+    .split-img-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px; overflow: auto; }
+    .split-img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: var(--shadow-md); cursor: zoom-in; }
+
+    .card.active-preview, .note-card.active-preview {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--primary-soft), var(--shadow-md);
+    }
+
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      height: 62px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      padding: 4px 8px env(safe-area-inset-bottom, 6px);
+      grid-template-columns: repeat(5, 1fr);
+      align-items: center;
+    }
+
+    [data-theme="dark"] .mobile-bottom-nav { background: rgba(16, 23, 38, 0.94); }
+
+    .mnav-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 2px;
+      border-radius: 10px;
+    }
+
+    .mnav-btn .mnav-ico { font-size: 1.18rem; line-height: 1.1; }
+    .mnav-btn.active { color: var(--primary); }
+    .mnav-btn.add-pill .mnav-ico {
+      background: var(--primary);
+      color: #ffffff;
+      width: 34px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    @media (min-width: 760px) {
+      .side-rail { display: flex; }
+      .page-switcher-wrap { display: none; }
+      #folderSection { display: none !important; }
+    }
+
+    @media (max-width: 759px) {
+      .mobile-bottom-nav { display: grid; }
+      #splitToggleBtn { display: none; }
+      body.split-mode .split-preview-pane { display: none !important; }
+      .workspace-main .container { padding: 12px 13px 86px; }
+    }
+
+
+    /* === v7.0 Lesson Playlists, Auto-Sync & QR Code Modal === */
+    .playlist-card {
+      padding: 13px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .playlist-meta { min-width: 0; flex: 1; }
+    .playlist-name { font-size: 0.94rem; font-weight: 700; color: var(--text); }
+    .playlist-sub { font-size: 0.76rem; color: var(--text-muted); margin-top: 2px; }
+    .playlist-pick-list {
+      max-height: 220px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+    .playlist-pick-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 11px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.83rem;
+      cursor: pointer;
+    }
+    .playlist-pick-row:last-child { border-bottom: none; }
+    .playlist-pick-row input { width: 17px; height: 17px; accent-color: var(--teach); flex-shrink: 0; }
+
+    .presenter-bar {
+      height: 56px;
+      padding: 0 14px;
+      background: #0f172a;
+      color: #f8fafc;
+      border-bottom: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .presenter-step-select {
+      height: 34px;
+      max-width: 260px;
+      padding: 0 10px;
+      border-radius: 9px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #f8fafc;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .qr-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      text-align: center;
+    }
+    .qr-canvas-wrap {
+      padding: 16px;
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      display: inline-flex;
+    }
+    .qr-url-pill {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--primary);
+      background: var(--primary-soft);
+      padding: 6px 12px;
+      border-radius: 9px;
+      word-break: break-all;
+      max-width: 100%;
+    }
+
+
+    /* === v7.0 Clear Version Pill, Instant Active Sync & Zero-Overlap Topbar === */
+    .topbar { z-index: 40; }
+    .brand { flex-shrink: 1; min-width: 0; }
+    .brand-title { flex-wrap: nowrap; gap: 6px; overflow: visible; }
+    #brandNameText { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .app-ver-pill {
+      display: inline-flex;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
+    }
+    body.classroom-mode .app-ver-pill { background: linear-gradient(135deg, #0f766e, #0284c7); }
+
+    .sync-now-btn {
+      height: 36px;
+      padding: 0 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+      flex-shrink: 0;
+    }
+    .sync-now-btn:hover { border-color: var(--primary); color: var(--primary); background: var(--primary-soft); }
+    .sync-now-btn.syncing { opacity: 0.75; pointer-events: none; }
+    .sync-dot { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; flex-shrink: 0; }
+    .sync-dot.ok { background: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+    .sync-dot.dirty { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22); }
+    .sync-dot.busy { background: #3b82f6; animation: pulseDot 0.9s infinite alternate; }
+    @keyframes pulseDot { from { opacity: 0.35; transform: scale(0.85); } to { opacity: 1; transform: scale(1.15); } }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 13px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+    .status-strip-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+    @media (max-width: 759px) {
+      .topbar-inner { padding: 10px 12px; gap: 6px; }
+      .brand-icon { width: 34px; height: 34px; border-radius: 9px; }
+      .brand-title { font-size: 0.98rem; }
+      #classroomToggleBtn, #settingsBtn, #openImportBtn, #batchToggleBtn { display: none !important; }
+      .sync-now-btn .sync-label-text { display: none; }
+      .sync-now-btn { padding: 0 9px; height: 34px; }
+      .icon-btn { width: 34px; height: 34px; }
+    }
+
   </style>
 </head>
 <body>
@@ -986,6 +1676,7 @@
         <div class="brand-text">
           <h1 class="brand-title">
             <span id="brandNameText">AI 作品館</span>
+            <span class="app-ver-pill" id="appVersionBadge" title="目前程式版本">v7.0</span>
             <span class="count-pill" id="totalCountBadge">0</span>
           </h1>
           <p class="brand-sub">整合 .html、.py 與常用網頁・課堂模式・版本紀錄與跨裝置同步</p>
@@ -993,9 +1684,20 @@
       </div>
 
       <div class="topbar-actions">
+        <button type="button" class="sync-now-btn" id="headerSyncNowBtn" title="一鍵即時雙向同步（拉取最新＋上傳變更）">
+          <span class="sync-dot" id="headerSyncDot"></span>
+          <span>☁️</span>
+          <span class="sync-label-text" id="headerSyncText">即時同步</span>
+        </button>
         <button class="classroom-btn" id="classroomToggleBtn" title="一鍵切換課堂模式，隱藏私人遊戲">
           <span>🎓</span>
           <span class="hide-mobile" id="classroomBtnLabel">課堂模式</span>
+        </button>
+        <button class="icon-btn" id="splitToggleBtn" title="Fold 7／平板／電腦 雙欄即時預覽模式" aria-label="雙欄預覽">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+            <line x1="12" y1="3" x2="12" y2="21"></line>
+          </svg>
         </button>
         <button class="icon-btn" id="viewModeBtn" title="切換卡片／精簡清單" aria-label="切換檢視模式">
           <svg id="viewGridIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1036,6 +1738,7 @@
           </svg>
         </button>
         <button class="icon-btn" id="settingsBtn" title="雲端同步、備份與資料夾管理" aria-label="備份與同步">
+          <span class="unsynced-dot" id="unsyncedDot" title="有未同步的新變動"></span>
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -1052,14 +1755,79 @@
     </div>
   </header>
 
+  <!-- Page Switcher: Apps Hub vs Notes Image Gallery -->
+  <div class="page-switcher-wrap">
+    <div class="page-tabs" role="tablist" aria-label="切換頁面">
+      <button type="button" class="page-tab-btn active" id="pageTabApps" data-page="apps">
+        📱 作品館 <span class="page-tab-count" id="appsTabCount">0</span>
+      </button>
+      <button type="button" class="page-tab-btn" id="pageTabNotes" data-page="notes">
+        🖼️ 筆記圖庫 <span class="page-tab-count" id="notesTabCount">0</span>
+      </button>
+    </div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+      <button type="button" class="btn-secondary" id="quickPlaylistBtn" style="height:36px; font-size:0.81rem;">🎬 課堂流程包</button>
+      <button type="button" class="btn-secondary" id="quickExcelBtn" style="height:36px; font-size:0.81rem;">📊 Excel</button>
+    </div>
+  </div>
+
+  <!-- Adaptive Multi-Device App Shell (Fold 7 / Tablet / Desktop Sidebar + Split Pane) -->
+  <div class="app-shell">
+    <aside class="side-rail" id="sideRail" aria-label="側邊導航欄">
+      <div class="rail-group">
+        <div class="rail-label"><span>工作區</span></div>
+        <button type="button" class="rail-item active" id="railTabApps" data-rail-page="apps">
+          <span class="rail-item-left"><span>📱</span><span>作品館</span></span>
+          <span class="rail-count" id="railAppsCount">0</span>
+        </button>
+        <button type="button" class="rail-item" id="railTabNotes" data-rail-page="notes">
+          <span class="rail-item-left"><span>🖼️</span><span>筆記圖庫</span></span>
+          <span class="rail-count" id="railNotesCount">0</span>
+        </button>
+        <button type="button" class="rail-item" id="railPlaylistBtn">
+          <span class="rail-item-left"><span>🎬</span><span>課堂流程包</span></span>
+          <span class="rail-count" id="railPlaylistCount">0</span>
+        </button>
+        <button type="button" class="rail-item" id="railExcelBtn">
+          <span class="rail-item-left"><span>📊</span><span>Excel 匯入／匯出</span></span>
+        </button>
+      </div>
+
+      <div class="rail-group" id="railFoldersGroup">
+        <div class="rail-label">
+          <span>資料夾</span>
+          <button type="button" class="results-clear-link" id="railManageFoldersBtn" style="font-size:0.72rem; padding:0;">管理／排序</button>
+        </div>
+        <div id="railFolderList"></div>
+      </div>
+
+      <div class="rail-group">
+        <div class="rail-label"><span>年級快捷篩選</span></div>
+        <div class="rail-grade-grid" id="railGradeList"></div>
+      </div>
+    </aside>
+
+    <div class="workspace-split">
+      <div class="workspace-main">
   <!-- Main Workspace -->
   <main class="container">
+    <!-- Main Screen Version & Active Sync Status Strip -->
+    <div class="status-strip" id="mainStatusStrip">
+      <div class="status-strip-left">
+        <strong style="color:var(--primary);">AI 作品館 v7.0</strong>
+        <span style="opacity:0.4;">|</span>
+        <span id="mainSyncBadgeText">雲端同步：尚未連結（點設定貼入同步 ID）</span>
+      </div>
+      <button type="button" class="results-clear-link" id="stripSyncNowBtn" style="padding:2px 8px;">🔄 立即雙向同步</button>
+    </div>
+
     <!-- Classroom Mode Active Banner -->
     <div class="classroom-banner" id="classroomBanner">
       <span>🎓 <strong>課堂模式已開啟</strong> — 目前只顯示教學專用平台與年級課題作品，已自動隱藏私人遊戲。</span>
       <button type="button" class="demo-clear-btn" id="exitClassroomBtn">退出課堂模式</button>
     </div>
 
+    <div id="appsPageWrap">
     <!-- Demo Notice Banner -->
     <div class="demo-banner" id="demoBanner" style="display:none;">
       <span>目前包含 <strong>示範項目</strong>，點擊即可體驗開啟效果與課堂模式切換；匯入你的作品後可隨時一鍵清除。</span>
@@ -1069,7 +1837,10 @@
     <!-- Pinned Quick Launch Strip -->
     <section class="quick-section" id="quickSection" style="display:none;">
       <div class="section-head">
-        <span class="section-label">★ 常用快速啟動</span>
+        <div class="quick-head-tabs" role="tablist">
+          <button type="button" class="quick-tab-btn active" id="quickTabFav" data-qmode="fav">★ 常用釘選</button>
+          <button type="button" class="quick-tab-btn" id="quickTabRecent" data-qmode="recent">🕒 最近開啟</button>
+        </div>
       </div>
       <div class="quick-strip" id="quickStrip"></div>
     </section>
@@ -1111,11 +1882,20 @@
       <!-- Quick Grade / Topic Tags -->
       <div class="tag-filter-row" id="quickTagBar" aria-label="年級與課題快捷標籤"></div>
 
-      <!-- Category Pills -->
-      <div class="cat-bar" id="categoryBar" role="tablist" aria-label="主題標籤篩選"></div>
+      <!-- Category Pills (kept clean & optional) -->
+      <div class="cat-bar" id="categoryBar" role="tablist" aria-label="主題標籤篩選" style="display:none;"></div>
     </section>
 
-    <!-- Batch Organize Bar -->
+    <!-- Results Summary & Quick Reset Bar -->
+    <div class="results-meta-bar" id="resultsMetaBar">
+      <div class="results-meta-left">
+        <span id="resultsSummaryText">顯示 0 個作品</span>
+        <button type="button" class="results-clear-link" id="toggleTopicFilterBtn" style="color:var(--text-muted); font-weight:600;">顯示主題分類 ▾</button>
+      </div>
+      <button type="button" class="results-clear-link" id="inlineResetFiltersBtn" style="display:none;">✕ 清除篩選</button>
+    </div>
+
+    <!-- Batch Organize Pro Bar -->
     <div class="batch-bar" id="batchBar">
       <div class="batch-left">
         <span id="batchCountText">已選取 0 個作品</span>
@@ -1123,9 +1903,20 @@
       </div>
       <div class="batch-controls">
         <select class="sort-select" id="batchFolderSelect" style="height:34px;"></select>
-        <button type="button" class="btn-secondary" id="batchMoveBtn" style="height:34px; padding:0 12px;">移至資料夾</button>
-        <button type="button" class="btn-danger" id="batchDeleteBtn" style="height:34px; padding:0 12px;">刪除所選</button>
-        <button type="button" class="btn-secondary" id="batchCancelBtn" style="height:34px; padding:0 12px;">完成</button>
+        <button type="button" class="btn-secondary" id="batchMoveBtn" style="height:34px; padding:0 11px;">移至資料夾</button>
+        <span class="batch-divider"></span>
+        <select class="sort-select" id="batchGradeSelect" style="height:34px;">
+          <option value="">＋年級標籤...</option>
+          <option value="F.3">加上 F.3</option>
+          <option value="F.4">加上 F.4</option>
+          <option value="F.5">加上 F.5</option>
+          <option value="F.6">加上 F.6</option>
+          <option value="HKDSE">加上 HKDSE</option>
+        </select>
+        <button type="button" class="btn-secondary" id="batchTagBtn" style="height:34px; padding:0 11px;">套用標籤</button>
+        <button type="button" class="btn-secondary" id="batchTeachBtn" style="height:34px; padding:0 11px;">🎓 設為課堂用</button>
+        <button type="button" class="btn-danger" id="batchDeleteBtn" style="height:34px; padding:0 11px;">刪除</button>
+        <button type="button" class="btn-secondary" id="batchCancelBtn" style="height:34px; padding:0 11px;">完成</button>
       </div>
     </div>
 
@@ -1142,7 +1933,83 @@
         <button class="btn-secondary" id="emptyResetBtn" style="display:none;">重設篩選</button>
       </div>
     </section>
+    </div><!-- /appsPageWrap -->
+
+    <!-- Notes Image Gallery Page -->
+    <div id="notesPageWrap" style="display:none;">
+      <div class="notes-toolbar">
+        <div class="search-row">
+          <div class="search-wrap">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="notesSearchInput" placeholder="搜尋筆記名稱、年級 (F.4/F.5/F.6)、課題 (Topic) 或檔名..." autocomplete="off" />
+            <button class="search-clear" id="notesSearchClearBtn" aria-label="清除搜尋">✕</button>
+          </div>
+          <button type="button" class="btn-primary" id="openAddNotesBtn" style="height:40px;">
+            + 匯入筆記圖 / 連結
+          </button>
+        </div>
+
+        <div class="tag-filter-row" id="notesGradeBar" aria-label="筆記年級篩選"></div>
+        <div class="cat-bar" id="notesTopicBar" aria-label="筆記課題篩選"></div>
+      </div>
+
+      <section class="notes-grid" id="notesGrid" aria-live="polite"></section>
+
+      <section class="empty-state" id="notesEmptyState" style="display:none;">
+        <div class="empty-icon">🖼️</div>
+        <h2 id="notesEmptyTitle">未有符合條件的筆記圖片</h2>
+        <p id="notesEmptyDesc">可一次多選 20–30 張 Gemini 生成的 JPEG 重點筆記，或貼上圖片網址／從 Excel 批量匯入，按年級及課題整理。</p>
+        <div class="empty-actions">
+          <button type="button" class="btn-primary" id="notesEmptyAddBtn">+ 匯入筆記圖片</button>
+          <button type="button" class="btn-secondary" id="notesEmptyResetBtn" style="display:none;">重設篩選</button>
+        </div>
+      </section>
+    </div>
   </main>
+      </div>
+
+      <aside class="split-preview-pane" id="splitPreviewPane" aria-label="雙欄即時預覽">
+        <div class="split-preview-header">
+          <div class="split-preview-meta">
+            <div class="split-preview-title" id="splitPreviewTitle">雙欄即時預覽</div>
+            <div class="split-preview-sub" id="splitPreviewSub">點選左側作品或筆記即可在此即時開啟</div>
+          </div>
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button type="button" class="btn-secondary" id="splitExpandBtn" style="height:32px; padding:0 10px; font-size:0.78rem; display:none;">⛶ 全螢幕</button>
+            <button type="button" class="mini-btn" id="splitCloseBtn" title="關閉雙欄預覽" aria-label="關閉雙欄">✕</button>
+          </div>
+        </div>
+        <div class="split-preview-body" id="splitPreviewBody">
+          <div class="split-empty">
+            <div style="font-size:2.2rem; margin-bottom:8px;">◫</div>
+            <div style="font-weight:700; color:var(--text); margin-bottom:4px;">Fold 7／大螢幕雙欄模式</div>
+            <div style="font-size:0.82rem;">在左側點擊任何 .html 互動平台、.py 程式或筆記圖片，即可在右側直接互動預覽，無需反覆開關視窗。</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="手機底部導航">
+    <button type="button" class="mnav-btn active" id="mnavApps" data-mnav="apps">
+      <span class="mnav-ico">📱</span><span>作品館</span>
+    </button>
+    <button type="button" class="mnav-btn" id="mnavNotes" data-mnav="notes">
+      <span class="mnav-ico">🖼️</span><span>筆記圖庫</span>
+    </button>
+    <button type="button" class="mnav-btn add-pill" id="mnavAdd" data-mnav="add">
+      <span class="mnav-ico">＋</span><span>加入</span>
+    </button>
+    <button type="button" class="mnav-btn" id="mnavClass" data-mnav="classroom">
+      <span class="mnav-ico">🎓</span><span>課堂</span>
+    </button>
+    <button type="button" class="mnav-btn" id="mnavSettings" data-mnav="settings">
+      <span class="mnav-ico">⚙️</span><span>同步設定</span>
+    </button>
+  </nav>
 
   <!-- Drag & Drop Overlay -->
   <div class="drop-overlay" id="dropOverlay">
@@ -1157,6 +2024,8 @@
   <input type="file" id="filePickerInput" multiple accept=".html,.htm,.py,text/html,text/x-python" style="display:none;" />
   <input type="file" id="folderPickerInput" webkitdirectory directory multiple style="display:none;" />
   <input type="file" id="backupImportInput" accept=".json,application/json" style="display:none;" />
+  <input type="file" id="excelImportInput" accept=".csv,text/csv" style="display:none;" />
+  <input type="file" id="noteImagesPickerInput" multiple accept="image/jpeg,image/png,image/webp,image/*" style="display:none;" />
 
   <!-- Import / Add Modal -->
   <div class="modal-backdrop" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle">
@@ -1167,8 +2036,9 @@
       </div>
       <div class="modal-body">
         <div class="modal-tabs" role="tablist">
-          <button type="button" class="modal-tab active" data-import-tab="files">📄 匯入 .html / .py 檔案</button>
-          <button type="button" class="modal-tab" data-import-tab="web">🌐 新增網頁連結</button>
+          <button type="button" class="modal-tab active" data-import-tab="files">📄 .html / .py</button>
+          <button type="button" class="modal-tab" data-import-tab="web">🌐 網頁連結</button>
+          <button type="button" class="modal-tab" data-import-tab="notes">🖼️ 筆記圖片</button>
         </div>
 
         <!-- Tab 1: Files -->
@@ -1290,11 +2160,50 @@
             <div class="emoji-row" id="webEmojiPicker"></div>
           </div>
         </div>
+        <!-- Tab 3: Notes JPEG / Image URLs -->
+        <div id="importTabNotes" style="display:none; flex-direction:column; gap:11px;">
+          <div class="picker-grid">
+            <button type="button" class="picker-card" id="pickNoteImagesBtn">
+              <span class="pk-icon">🖼️</span>
+              <span class="pk-title">多選本機 JPEG / PNG 筆記</span>
+              <span class="pk-desc">可一次選取 20–30 張圖片，自動儲存到圖庫</span>
+            </button>
+            <div class="picker-card" style="cursor:default; text-align:left; align-items:stretch;">
+              <span class="pk-title" style="font-size:0.84rem;">🔗 或貼上圖片連結（每行一張）</span>
+              <textarea id="noteUrlsTextarea" rows="3" placeholder="F.5 電解重點 | https://...jpg&#10;支援 Google Drive 分享連結自動轉圖" style="width:100%; border:1px solid var(--border); border-radius:8px; padding:6px 8px; font-size:0.78rem; background:var(--surface);"></textarea>
+            </div>
+          </div>
+
+          <div id="stagedNotesSummary" style="display:none; font-size:0.82rem; font-weight:600; color:var(--primary); background:var(--primary-soft); padding:8px 12px; border-radius:10px;"></div>
+
+          <div class="form-2col">
+            <div class="field">
+              <label for="noteGradeSelect">年級分類</label>
+              <select id="noteGradeSelect">
+                <option value="F.5">F.5</option>
+                <option value="F.4">F.4</option>
+                <option value="F.6">F.6</option>
+                <option value="F.3">F.3</option>
+                <option value="HKDSE">HKDSE</option>
+                <option value="未分類">未分類</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="noteTopicInput">課題 (Topic)</label>
+              <input type="text" id="noteTopicInput" placeholder="例如：電解、酸鹼滴定、有機化學" />
+            </div>
+          </div>
+          <label class="check-row">
+            <input type="checkbox" id="noteTeachingCheck" checked />
+            <span>🎓 歸入課堂教學筆記（課堂模式下可見）</span>
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-secondary" id="cancelImportBtn">取消</button>
         <button type="button" class="btn-primary" id="confirmImportBtn" disabled>確認加入 (0)</button>
         <button type="button" class="btn-primary" id="confirmWebBtn" style="display:none;">加入網頁</button>
+        <button type="button" class="btn-primary" id="confirmNotesBtn" style="display:none;">加入筆記圖庫</button>
       </div>
     </div>
   </div>
@@ -1459,6 +2368,19 @@
         <button class="mini-btn" id="closeSettingsBtn" aria-label="關閉">✕</button>
       </div>
       <div class="modal-body">
+        <!-- Excel (.csv) Import / Export -->
+        <div class="sync-box" style="border-color: var(--primary); background: var(--primary-soft);">
+          <div class="setting-text">
+            <h4>📊 Excel 表格匯入／匯出（.csv，Excel 直接開啟不亂碼）</h4>
+            <p>可在 Excel 統一整理名稱、HTML、URL、筆記圖片連結、資料夾、年級及課題標籤，換機或批量統整一鍵匯入。</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="btn-primary" id="exportExcelBtn" style="height:35px;">📊 匯出 Excel (.csv)</button>
+            <button type="button" class="btn-secondary" id="importExcelBtn" style="height:35px;">📤 從 Excel 匯入</button>
+            <button type="button" class="btn-secondary" id="downloadExcelTemplateBtn" style="height:35px;">📥 下載空白範本</button>
+          </div>
+        </div>
+
         <!-- Manual JSON Backup -->
         <div class="setting-card">
           <div class="setting-text">
@@ -1487,9 +2409,15 @@
               <input type="text" id="syncGistIdInput" placeholder="留空會自動建立私人 Gist" autocomplete="off" />
             </div>
           </div>
+          <label class="check-row" style="padding:7px 10px; font-size:0.8rem;">
+            <input type="checkbox" id="autoSyncCheck" />
+            <span>🔄 開啟自動背景同步（打開 App 自動拉取、修改後 3 秒自動上傳）</span>
+          </label>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <button type="button" class="btn-primary" id="syncPushBtn" style="height:35px;">☁️ 上傳至雲端</button>
             <button type="button" class="btn-secondary" id="syncPullBtn" style="height:35px;">⬇️ 從雲端合併還原</button>
+            <button type="button" class="btn-secondary" id="exportSyncIdBtn" style="height:35px;" title="產生包含 Token 與 Gist ID 的一鍵同步配對碼">🔑 複製同步 ID</button>
+            <button type="button" class="btn-secondary" id="openImportSyncIdBtn" style="height:35px;" title="在新手機或電腦貼上同步 ID 或 Gist ID 立即同步">📥 匯入同步 ID</button>
             <span class="sync-status" id="syncStatusText">尚未同步</span>
           </div>
         </div>
@@ -1519,6 +2447,7 @@
         </div>
       </div>
       <div class="modal-footer">
+        <span style="margin-right:auto; font-family:var(--mono); font-size:0.78rem; color:var(--text-muted);">程式版本：v7.0</span>
         <button type="button" class="btn-primary" id="doneSettingsBtn">完成</button>
       </div>
     </div>
@@ -1561,6 +2490,136 @@
     <div class="py-viewer-body">
       <div class="py-meta-strip" id="pyMetaStrip"></div>
       <pre class="py-code-box" id="pyCodeContent"></pre>
+    </div>
+  </div>
+
+  <!-- Fullscreen Note Image Lightbox -->
+  <div class="lightbox-overlay" id="lightboxOverlay" aria-hidden="true">
+    <div class="lightbox-bar">
+      <div class="viewer-left">
+        <button type="button" class="lightbox-btn" id="closeLightboxBtn">← 返回圖庫</button>
+        <div class="viewer-meta">
+          <div class="viewer-title" id="lightboxTitle">筆記名稱</div>
+          <div class="viewer-file" id="lightboxFile" style="color:#94a3b8;">note.jpg</div>
+        </div>
+      </div>
+      <div class="viewer-actions">
+        <button type="button" class="lightbox-btn" id="zoomOutBtn" title="縮小">−</button>
+        <button type="button" class="lightbox-btn" id="zoomResetBtn" title="重設大小">100%</button>
+        <button type="button" class="lightbox-btn" id="zoomInBtn" title="放大">＋</button>
+        <button type="button" class="lightbox-btn" id="downloadNoteImgBtn" title="下載圖片">⬇</button>
+      </div>
+    </div>
+    <button type="button" class="lightbox-nav prev" id="lightboxPrevBtn" aria-label="上一張">‹</button>
+    <div class="lightbox-stage" id="lightboxStage">
+      <img class="lightbox-img" id="lightboxImg" alt="筆記預覽" />
+    </div>
+    <button type="button" class="lightbox-nav next" id="lightboxNextBtn" aria-label="下一張">›</button>
+    <div class="lightbox-footer">
+      <div id="lightboxTags"></div>
+      <div id="lightboxCounter">1 / 1</div>
+    </div>
+  </div>
+
+  <!-- Lesson Playlist Manager Modal -->
+  <div class="modal-backdrop" id="playlistModal" role="dialog" aria-modal="true" aria-labelledby="playlistModalTitle">
+    <div class="modal" style="max-width:600px;">
+      <div class="modal-header">
+        <h3 id="playlistModalTitle">🎬 課堂流程包（Lesson Playlist）</h3>
+        <button class="mini-btn" id="closePlaylistModalBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div id="playlistListWrap" style="display:flex; flex-direction:column; gap:9px;"></div>
+
+        <div class="classify-box" style="margin-top:4px;">
+          <div style="font-size:0.86rem; font-weight:700; color:var(--text);">＋ 建立新課堂流程包</div>
+          <div class="field">
+            <label for="newPlaylistNameInput">流程包名稱</label>
+            <input type="text" id="newPlaylistNameInput" placeholder="例如：F.5 電解第一節（模擬＋重點筆記）" />
+          </div>
+          <div class="field">
+            <label>勾選要串連播放的作品與筆記圖片（可混選 .html、網頁及 JPEG 筆記）</label>
+            <div class="playlist-pick-list" id="playlistItemPicker"></div>
+          </div>
+          <button type="button" class="btn-primary" id="createPlaylistBtn" style="width:100%;">建立課堂流程包</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="donePlaylistModalBtn">關閉</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Lesson Playlist Presenter Overlay -->
+  <div class="viewer-overlay" id="presenterOverlay" aria-hidden="true">
+    <div class="presenter-bar">
+      <div class="viewer-left">
+        <button type="button" class="lightbox-btn" id="closePresenterBtn">✕ 退出播放</button>
+        <div class="viewer-meta">
+          <div class="viewer-title" id="presenterPlaylistName">課堂流程包</div>
+          <div class="viewer-file" id="presenterStepInfo" style="color:#94a3b8;">1 / 3</div>
+        </div>
+      </div>
+      <div class="viewer-actions">
+        <select class="presenter-step-select" id="presenterStepSelect" aria-label="跳至步驟"></select>
+        <button type="button" class="lightbox-btn" id="presenterQrBtn" style="display:none;">📱 QR</button>
+        <button type="button" class="lightbox-btn" id="presenterPrevBtn">‹ 上一頁</button>
+        <button type="button" class="lightbox-btn" id="presenterNextBtn" style="background:#2563eb; border-color:#3b82f6;">下一頁 ›</button>
+      </div>
+    </div>
+    <div id="presenterStage" style="flex:1; display:flex; flex-direction:column; overflow:auto; background:var(--bg);"></div>
+  </div>
+
+  <!-- QR Code Share Modal -->
+  <div class="modal-backdrop" id="qrModal" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
+    <div class="modal" style="max-width:420px;">
+      <div class="modal-header">
+        <h3 id="qrModalTitle">📱 課堂掃碼分享 QR Code</h3>
+        <button class="mini-btn" id="closeQrModalBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="qr-box">
+          <div id="qrItemTitle" style="font-weight:700; font-size:1rem; color:var(--text);"></div>
+          <div class="qr-canvas-wrap">
+            <canvas id="qrCanvas" width="240" height="240"></canvas>
+          </div>
+          <div class="qr-url-pill" id="qrUrlText"></div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:space-between;">
+        <button type="button" class="btn-secondary" id="copyQrUrlBtn">📋 複製網址</button>
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="btn-secondary" id="downloadQrBtn">⬇ 下載圖檔</button>
+          <button type="button" class="btn-primary" id="doneQrModalBtn">完成</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Import Sync ID Modal -->
+  <div class="modal-backdrop" id="syncIdModal" role="dialog" aria-modal="true" aria-labelledby="syncIdModalTitle">
+    <div class="modal" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 id="syncIdModalTitle">🔑 匯入同步 ID（手機 ⇄ 電腦快速配對）</h3>
+        <button class="mini-btn" id="closeSyncIdModalBtn" aria-label="關閉">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin:0; font-size:0.83rem; color:var(--text-secondary);">
+          貼上另一部裝置產生的 <code>AIHUB-SYNC-...</code> 完整同步 ID（會自動填入 Token 與 Gist ID 並立即同步），或直接貼上 <strong>Gist ID／Gist 網址</strong>。
+        </p>
+        <div class="field">
+          <label for="importSyncIdTextarea">同步 ID / Gist ID</label>
+          <textarea id="importSyncIdTextarea" rows="3" placeholder="貼上 AIHUB-SYNC-... 或 Gist ID（例如 a1b2c3d4...）"></textarea>
+        </div>
+        <label class="check-row" style="padding:7px 10px; font-size:0.8rem;">
+          <input type="checkbox" id="importSyncPullNowCheck" checked />
+          <span>匯入後立即從雲端拉取最新作品與資料夾</span>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelSyncIdModalBtn">取消</button>
+        <button type="button" class="btn-primary" id="confirmImportSyncIdBtn">確認匯入並同步</button>
+      </div>
     </div>
   </div>
 
@@ -1609,6 +2668,25 @@
       let importTab = 'files';
       let webImportMode = 'single';
       let classifyMode = 'auto';
+      let activePage = 'apps';
+      let quickStripMode = 'fav';
+      let showTopicRow = false;
+      let hasUnsyncedChanges = false;
+      let splitMode = false;
+      let activePreviewId = null;
+      let playlists = [];
+      let presenterPlaylist = null;
+      let presenterIndex = 0;
+      let currentQrUrl = '';
+      let autoSyncEnabled = false;
+      let autoPushTimer = null;
+      let notesGradeFilter = 'all';
+      let notesTopicFilter = 'all';
+      let notesSearchQuery = '';
+      let stagedNoteFiles = [];
+      let lightboxList = [];
+      let lightboxIndex = 0;
+      let lightboxZoom = 1;
       let editingId = null;
       let renamingId = null;
       let pendingConfirmAction = null;
@@ -1738,6 +2816,28 @@
           addedAt: Date.now() - 150000,
           lastOpenedAt: Date.now() - 240000,
           content: `from pathlib import Path\nfrom PIL import Image\n\ndef convert_jfif_folder(folder_path: str):\n    folder = Path(folder_path)\n    files = sorted(folder.glob("*.jfif"))\n    for f in files:\n        out = f.with_suffix(".jpg")\n        with Image.open(f) as img:\n            img.convert("RGB").save(out, "JPEG", quality=95)\n        print(f"Converted: {f.name} -> {out.name}")\n\nif __name__ == "__main__":\n    convert_jfif_folder(".")\n`
+        }
+        ,{
+          id: 'demo_note_electrolysis',
+          title: 'F.5 電解重點溫習筆記（示範圖）',
+          filename: 'F5_Electrolysis_Notes_demo.jpg',
+          path: 'Notes/F5_Electrolysis_Notes_demo.jpg',
+          type: 'image',
+          folderId: 'f_chem',
+          category: '化學教學',
+          isTeaching: true,
+          tags: ['F.5', 'HKDSE', '電解'],
+          topic: '電解',
+          version: 'v1.0',
+          history: [{ version: 'v1.0', date: '2026-11-23 07:40', note: '筆記圖庫示範圖片' }],
+          icon: '🖼️',
+          note: '點開即可全螢幕放大檢視，亦可按年級與課題篩選。',
+          favorite: false,
+          isDemo: true,
+          size: 0,
+          addedAt: Date.now() - 80000,
+          lastOpenedAt: Date.now() - 80000,
+          content: "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23ffffff'/%3E%3Crect x='24' y='24' width='752' height='552' rx='20' fill='%23f0fdfa' stroke='%230f766e' stroke-width='4'/%3E%3Crect x='24' y='24' width='752' height='92' rx='20' fill='%230f766e'/%3E%3Ctext x='60' y='82' font-family='sans-serif' font-size='34' font-weight='bold' fill='%23ffffff'%3EHKDSE F.5 %E9%9B%BB%E8%A7%A3%E9%87%8D%E9%BB%9E%E7%AD%86%E8%A8%98%EF%BC%88%E7%A4%BA%E7%AF%84%E5%9C%96%EF%BC%89%3C/text%3E%3Crect x='56' y='150' width='320' height='190' rx='14' fill='%23ffffff' stroke='%2399f6e4' stroke-width='2'/%3E%3Ctext x='80' y='192' font-family='sans-serif' font-size='24' font-weight='bold' fill='%230f766e'%3E%E9%99%B0%E6%A5%B5 (-)%EF%BC%9A%E9%82%84%E5%8E%9F%E5%8F%8D%E6%87%89%3C/text%3E%3Ctext x='80' y='238' font-family='sans-serif' font-size='20' fill='%23334155'%3E%E2%80%A2 Cu2+ + 2e- %E2%86%92 Cu(s)%3C/text%3E%3Ctext x='80' y='278' font-family='sans-serif' font-size='20' fill='%23334155'%3E%E2%80%A2 2H+ + 2e- %E2%86%92 H2(g)%3C/text%3E%3Crect x='424' y='150' width='320' height='190' rx='14' fill='%23ffffff' stroke='%2399f6e4' stroke-width='2'/%3E%3Ctext x='448' y='192' font-family='sans-serif' font-size='24' font-weight='bold' fill='%23dc2626'%3E%E9%99%BD%E6%A5%B5 (+)%EF%BC%9A%E6%B0%A7%E5%8C%96%E5%8F%8D%E6%87%89%3C/text%3E%3Ctext x='448' y='238' font-family='sans-serif' font-size='20' fill='%23334155'%3E%E2%80%A2 4OH- %E2%86%92 O2 + 2H2O + 4e-%3C/text%3E%3Ctext x='448' y='278' font-family='sans-serif' font-size='20' fill='%23334155'%3E%E2%80%A2 2Cl- %E2%86%92 Cl2(g) + 2e-%3C/text%3E%3Ctext x='60' y='410' font-family='sans-serif' font-size='22' fill='%23475569'%3E%E2%9C%85 %E9%BB%9E%E6%93%8A%E5%8D%B3%E5%8F%AF%E5%85%A8%E8%9E%A2%E5%B9%95%E6%94%BE%E5%A4%A7%E6%AA%A2%E8%A6%96%EF%BC%8C%E6%94%AF%E6%8F%B4%E5%A4%9A%E9%81%B8%E5%8C%AF%E5%85%A5 20-30 %E5%BC%B5 JPEG %E7%AD%86%E8%A8%98%3C/text%3E%3C/svg%3E"
         }
       ];
 
@@ -1938,8 +3038,22 @@
       }
 
       // Base visible pool (respects Classroom Mode)
+      function getAppsWorks() {
+        return works.filter((w) => w.type !== 'image');
+      }
+
+      function getNotesWorks() {
+        return works.filter((w) => w.type === 'image');
+      }
+
       function getVisiblePool() {
-        return classroomMode ? works.filter(isTeachingItem) : works;
+        const appsOnly = getAppsWorks();
+        return classroomMode ? appsOnly.filter(isTeachingItem) : appsOnly;
+      }
+
+      function getVisibleNotesPool() {
+        const notesOnly = getNotesWorks();
+        return classroomMode ? notesOnly.filter(isTeachingItem) : notesOnly;
       }
 
       function getFilteredWorks() {
@@ -1966,16 +3080,44 @@
           });
       }
 
+      function markDirty() {
+        hasUnsyncedChanges = true;
+        try { localStorage.setItem('ai_hub_dirty', '1'); } catch (e) {}
+        const dot = $('unsyncedDot');
+        if (dot) dot.classList.add('visible');
+        refreshSyncBannerFromStorage();
+        scheduleAutoSyncPush();
+      }
+
+      function clearDirty() {
+        hasUnsyncedChanges = false;
+        try { localStorage.removeItem('ai_hub_dirty'); } catch (e) {}
+        const dot = $('unsyncedDot');
+        if (dot) dot.classList.remove('visible');
+        refreshSyncBannerFromStorage();
+      }
+
       function renderQuickStrip() {
         const pool = getVisiblePool();
         const favs = pool.filter((w) => w.favorite).slice(0, 10);
+        const recents = [...pool].sort((a, b) => (b.lastOpenedAt || 0) - (a.lastOpenedAt || 0)).slice(0, 8);
         const sec = $('quickSection');
-        if (favs.length === 0) {
+        if (pool.length === 0) {
+          sec.style.display = 'none';
+          return;
+        }
+        if (quickStripMode === 'fav' && favs.length === 0 && recents.length > 0) {
+          quickStripMode = 'recent';
+        }
+        $('quickTabFav').classList.toggle('active', quickStripMode === 'fav');
+        $('quickTabRecent').classList.toggle('active', quickStripMode === 'recent');
+        const list = quickStripMode === 'fav' ? favs : recents;
+        if (list.length === 0) {
           sec.style.display = 'none';
           return;
         }
         sec.style.display = 'block';
-        $('quickStrip').innerHTML = favs
+        $('quickStrip').innerHTML = list
           .map(
             (w) => `
               <button type="button" class="quick-chip" data-quick-id="${escapeHtml(w.id)}">
@@ -1993,10 +3135,11 @@
       function renderFolders() {
         $('folderSection').style.display = classroomMode ? 'none' : 'block';
         const bar = $('folderBar');
-        const allBtn = `<button type="button" class="folder-chip ${activeFolder === 'all' ? 'active' : ''}" data-folder="all"><span>🗂️ 全部資料夾</span><span class="f-num">${works.length}</span></button>`;
+        const appsOnly = getAppsWorks();
+        const allBtn = `<button type="button" class="folder-chip ${activeFolder === 'all' ? 'active' : ''}" data-folder="all"><span>🗂️ 全部資料夾</span><span class="f-num">${appsOnly.length}</span></button>`;
         const folderBtns = folders
           .map((f) => {
-            const cnt = works.filter((w) => w.folderId === f.id).length;
+            const cnt = getAppsWorks().filter((w) => w.folderId === f.id).length;
             return `<button type="button" class="folder-chip ${activeFolder === f.id ? 'active' : ''}" data-folder="${escapeHtml(f.id)}">` +
               `<span class="f-dot" style="background:${escapeHtml(f.color || '#2563eb')}"></span>` +
               `<span>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</span>` +
@@ -2027,18 +3170,19 @@
 
       function renderCategories() {
         const bar = $('categoryBar');
-        if (classroomMode) {
+        if (classroomMode || !showTopicRow) {
           bar.style.display = 'none';
           return;
         }
         bar.style.display = 'flex';
-        const favCount = works.filter((w) => w.favorite).length;
+        const appsList = getAppsWorks();
+        const favCount = appsList.filter((w) => w.favorite).length;
         const pills = [
-          { key: 'all', label: '全部主題', count: works.length },
+          { key: 'all', label: '全部主題', count: appsList.length },
           { key: 'fav', label: '★ 常用', count: favCount }
         ];
         CATEGORIES.forEach((cat) => {
-          const count = works.filter((w) => w.category === cat).length;
+          const count = appsList.filter((w) => w.category === cat).length;
           pills.push({ key: cat, label: cat, count });
         });
 
@@ -2063,6 +3207,15 @@
         const list = getFilteredWorks();
         const grid = $('cardsGrid');
         const empty = $('emptyState');
+
+        const htmlCnt = list.filter((w) => w.type === 'html').length;
+        const pyCnt = list.filter((w) => w.type === 'py').length;
+        const webCnt = list.filter((w) => w.type === 'web').length;
+        const hasAnyFilter = Boolean(searchQuery.trim() || activeFolder !== 'all' || activeCategory !== 'all' || activeQuickTag !== 'all' || activeType !== 'all');
+        $('resultsSummaryText').textContent = `顯示 ${list.length} / ${pool.length} 個作品（HTML ${htmlCnt} · PY ${pyCnt} · 網頁 ${webCnt}）`;
+        $('inlineResetFiltersBtn').style.display = hasAnyFilter ? 'inline-flex' : 'none';
+        $('toggleTopicFilterBtn').style.display = classroomMode ? 'none' : 'inline-flex';
+        $('toggleTopicFilterBtn').textContent = showTopicRow ? '收合主題分類 ▴' : '顯示主題分類 ▾';
 
         if (list.length === 0) {
           grid.innerHTML = '';
@@ -2090,7 +3243,7 @@
             const openText = w.type === 'html' ? '開啟頁面 →' : w.type === 'py' ? '檢視程式 →' : '前往網頁 →';
             const tagsHtml = (w.tags || []).map((t) => `<span class="quick-tag">${escapeHtml(t)}</span>`).join('');
             return `
-              <article class="card ${isSelected ? 'selected-batch' : ''}" data-id="${escapeHtml(w.id)}" style="--accent:${escapeHtml(folder.color || '#2563eb')};" tabindex="0" role="button" aria-label="開啟 ${escapeHtml(w.title)}">
+              <article class="card ${isSelected ? 'selected-batch' : ''} ${splitMode && activePreviewId === w.id ? 'active-preview' : ''}" data-id="${escapeHtml(w.id)}" style="--accent:${escapeHtml(folder.color || '#2563eb')};" tabindex="0" role="button" aria-label="開啟 ${escapeHtml(w.title)}">
                 <div class="card-top">
                   ${batchMode ? `<input type="checkbox" class="batch-check" data-batch-id="${escapeHtml(w.id)}" ${isSelected ? 'checked' : ''} />` : ''}
                   <div class="card-avatar">${escapeHtml(w.icon || (w.type === 'py' ? '🐍' : w.type === 'web' ? '🌐' : '📄'))}</div>
@@ -2102,6 +3255,7 @@
                     </div>
                   </div>
                   <div class="card-actions">
+                    ${w.type === 'web' ? `<button type="button" class="mini-btn" data-action="qr" data-id="${escapeHtml(w.id)}" title="產生分享 QR Code" aria-label="QR Code">📱</button>` : ''}
                     <button type="button" class="mini-btn" data-action="rename" data-id="${escapeHtml(w.id)}" title="快速修改名稱" aria-label="修改名稱">
                       ✏️
                     </button>
@@ -2114,7 +3268,7 @@
                   </div>
                 </div>
                 <div class="card-filename-row">
-                  <span class="filename-badge" title="${escapeHtml(w.path || w.filename)}">
+                  <span class="filename-badge" data-copy-text="${escapeHtml(w.type === 'web' ? (w.url || w.filename) : w.filename)}" title="點擊複製：${escapeHtml(w.path || w.filename)}">
                     ${escapeHtml(w.filename)}
                   </span>
                 </div>
@@ -2134,18 +3288,1020 @@
           .join('');
       }
 
+      function normalizeImageUrl(rawUrl) {
+        const u = String(rawUrl || '').trim();
+        // Convert Google Drive share link to direct viewable image URL
+        const m1 = u.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (m1) return `https://lh3.googleusercontent.com/d/${m1[1]}`;
+        const m2 = u.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+        if (m2) return `https://lh3.googleusercontent.com/d/${m2[1]}`;
+        return u;
+      }
+
+      function getNoteGrade(n) {
+        const tags = Array.isArray(n.tags) ? n.tags : [];
+        return GRADE_PRESETS.find((g) => tags.includes(g)) || '未分類';
+      }
+
+      function getNoteTopic(n) {
+        if (n.topic && n.topic.trim()) return n.topic.trim();
+        const tags = Array.isArray(n.tags) ? n.tags : [];
+        const nonGrade = tags.find((t) => !GRADE_PRESETS.includes(t));
+        return nonGrade || '綜合重點';
+      }
+
+      function getFilteredNotes() {
+        const q = notesSearchQuery.trim().toLowerCase();
+        return getVisibleNotesPool()
+          .filter((n) => {
+            if (notesGradeFilter !== 'all' && !(Array.isArray(n.tags) && n.tags.includes(notesGradeFilter))) return false;
+            if (notesTopicFilter !== 'all' && getNoteTopic(n) !== notesTopicFilter) return false;
+            if (q) {
+              const hay = (n.title + ' ' + n.filename + ' ' + (n.tags || []).join(' ') + ' ' + getNoteTopic(n) + ' ' + (n.note || '')).toLowerCase();
+              if (!hay.includes(q)) return false;
+            }
+            return true;
+          })
+          .sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+      }
+
+      function renderNotesPage() {
+        const pool = getVisibleNotesPool();
+        $('notesTabCount').textContent = String(pool.length);
+        $('appsTabCount').textContent = String(getVisiblePool().length);
+
+        // Grade Filter Bar
+        const gBar = $('notesGradeBar');
+        gBar.innerHTML =
+          `<button type="button" class="tag-pill ${notesGradeFilter === 'all' ? 'active' : ''}" data-ngrade="all">🎓 全部年級 (${pool.length})</button>` +
+          GRADE_PRESETS.map((g) => {
+            const cnt = pool.filter((n) => (n.tags || []).includes(g)).length;
+            return `<button type="button" class="tag-pill ${notesGradeFilter === g ? 'active' : ''}" data-ngrade="${g}">${g} <span style="opacity:.72">${cnt}</span></button>`;
+          }).join('');
+
+        // Topic Filter Bar
+        const topicSet = new Set();
+        pool.forEach((n) => topicSet.add(getNoteTopic(n)));
+        const topics = Array.from(topicSet);
+        const tBar = $('notesTopicBar');
+        tBar.innerHTML =
+          `<button type="button" class="cat-pill ${notesTopicFilter === 'all' ? 'active' : ''}" data-ntopic="all">📚 全部課題 <span class="pill-num">${pool.length}</span></button>` +
+          topics.map((tp) => {
+            const cnt = pool.filter((n) => getNoteTopic(n) === tp).length;
+            return `<button type="button" class="cat-pill ${notesTopicFilter === tp ? 'active' : ''}" data-ntopic="${escapeHtml(tp)}">${escapeHtml(tp)} <span class="pill-num">${cnt}</span></button>`;
+          }).join('');
+
+        const list = getFilteredNotes();
+        const grid = $('notesGrid');
+        const empty = $('notesEmptyState');
+
+        if (list.length === 0) {
+          grid.innerHTML = '';
+          empty.style.display = 'block';
+          const isFiltered = pool.length > 0;
+          $('notesEmptyTitle').textContent = isFiltered ? '找不到符合條件的筆記圖片' : '筆記圖庫目前是空的';
+          $('notesEmptyResetBtn').style.display = isFiltered ? 'inline-flex' : 'none';
+          return;
+        }
+
+        empty.style.display = 'none';
+        grid.innerHTML = list
+          .map((n) => {
+            const src = n.content || normalizeImageUrl(n.url || n.path);
+            const topic = getNoteTopic(n);
+            const tagsHtml = (n.tags || []).map((t) => `<span class="quick-tag">${escapeHtml(t)}</span>`).join('');
+            return `
+              <article class="note-card ${splitMode && activePreviewId === n.id ? 'active-preview' : ''}" data-note-id="${escapeHtml(n.id)}" tabindex="0" role="button" aria-label="放大檢視 ${escapeHtml(n.title)}">
+                <div class="note-thumb-wrap">
+                  <img class="note-thumb" src="${escapeHtml(src)}" alt="${escapeHtml(n.title)}" loading="lazy" />
+                  <span class="note-zoom-hint">🔍 點擊放大</span>
+                </div>
+                <div class="note-body">
+                  <div class="note-head">
+                    <h3 class="note-title">${escapeHtml(n.title)}</h3>
+                    <div class="card-actions">
+                      <button type="button" class="mini-btn" data-note-action="rename" data-id="${escapeHtml(n.id)}" title="修改名稱">✏️</button>
+                      <button type="button" class="mini-btn" data-note-action="edit" data-id="${escapeHtml(n.id)}" title="編輯標籤與刪除">⋯</button>
+                    </div>
+                  </div>
+                  <div class="note-file">${escapeHtml(n.filename)}</div>
+                  <div class="card-tags-line">
+                    ${tagsHtml}
+                    <span class="cat-tag">📚 ${escapeHtml(topic)}</span>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+      }
+
+      function switchPage(page) {
+        activePage = page;
+        $('pageTabApps').classList.toggle('active', page === 'apps');
+        $('pageTabNotes').classList.toggle('active', page === 'notes');
+        $('appsPageWrap').style.display = page === 'apps' ? 'block' : 'none';
+        $('notesPageWrap').style.display = page === 'notes' ? 'block' : 'none';
+        if (page === 'notes') renderNotesPage();
+        renderSideRail();
+      }
+
+      // Lightbox Functions
+      function openLightbox(noteId) {
+        lightboxList = getFilteredNotes();
+        const idx = lightboxList.findIndex((n) => n.id === noteId);
+        if (idx < 0) return;
+        lightboxIndex = idx;
+        lightboxZoom = 1;
+        renderLightbox();
+        $('lightboxOverlay').classList.add('open');
+        $('lightboxOverlay').setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function renderLightbox() {
+        const n = lightboxList[lightboxIndex];
+        if (!n) return;
+        const src = n.content || normalizeImageUrl(n.url || n.path);
+        $('lightboxTitle').textContent = n.title;
+        $('lightboxFile').textContent = n.filename;
+        const img = $('lightboxImg');
+        img.src = src;
+        applyLightboxZoom(1);
+        $('lightboxCounter').textContent = `${lightboxIndex + 1} / ${lightboxList.length}`;
+        $('lightboxTags').innerHTML = (n.tags || []).map((t) => `<span class="quick-tag" style="margin-right:5px;">${escapeHtml(t)}</span>`).join('') +
+          `<span class="cat-tag">📚 ${escapeHtml(getNoteTopic(n))}</span>`;
+        $('lightboxPrevBtn').style.display = lightboxList.length > 1 ? 'inline-flex' : 'none';
+        $('lightboxNextBtn').style.display = lightboxList.length > 1 ? 'inline-flex' : 'none';
+      }
+
+      function applyLightboxZoom(z) {
+        lightboxZoom = Math.max(0.5, Math.min(3.5, z));
+        const img = $('lightboxImg');
+        img.classList.toggle('zoomed', lightboxZoom > 1.01);
+        img.style.transform = `scale(${lightboxZoom})`;
+        $('zoomResetBtn').textContent = Math.round(lightboxZoom * 100) + '%';
+      }
+
+      function closeLightbox() {
+        $('lightboxOverlay').classList.remove('open');
+        $('lightboxOverlay').setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      // Note Image Importer (Local JPEG/PNG + Image URLs)
+      function fileToCompressedDataUrl(file) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(file);
+        });
+      }
+
+      async function handleNoteImageFiles(fileList) {
+        const imgs = Array.from(fileList || []).filter((f) => /^image\//i.test(f.type) || /\.(jpe?g|png|webp|gif)$/i.test(f.name));
+        if (imgs.length === 0) return showToast('請選擇 JPEG / PNG 圖片檔案');
+        stagedNoteFiles = imgs;
+        const box = $('stagedNotesSummary');
+        box.style.display = 'block';
+        box.textContent = `✅ 已選取 ${imgs.length} 張筆記圖片，請選擇年級與課題後按「加入筆記圖庫」`;
+      }
+
+      async function commitNotesImport() {
+        const grade = $('noteGradeSelect').value;
+        const topic = $('noteTopicInput').value.trim();
+        const isTeaching = $('noteTeachingCheck').checked;
+        const urlEntries = parseBatchWebLines($('noteUrlsTextarea').value);
+
+        if (stagedNoteFiles.length === 0 && urlEntries.length === 0) {
+          return showToast('請先選取本機圖片或貼上圖片網址');
+        }
+
+        if (Array.isArray(data.playlists)) {
+          playlists = data.playlists;
+          savePlaylists();
+        }
+        let count = 0;
+        for (const file of stagedNoteFiles) {
+          const dataUrl = await fileToCompressedDataUrl(file);
+          if (!dataUrl) continue;
+          const baseTitle = file.name.replace(/\.(jpe?g|png|webp|gif)$/i, '').replace(/[_-]+/g, ' ').trim() || file.name;
+          const guess = inferSuggestion(file.name, baseTitle, '', 'image');
+          const tags = Array.from(new Set([...(grade !== '未分類' ? [grade] : []), ...(topic ? [topic] : []), ...guess.tags]));
+          const item = {
+            id: 'note_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+            title: baseTitle,
+            filename: file.name,
+            path: file.webkitRelativePath || file.name,
+            type: 'image',
+            folderId: 'f_chem',
+            category: '化學教學',
+            isTeaching,
+            tags,
+            topic: topic || '重點筆記',
+            version: 'v1.0',
+            history: [{ version: 'v1.0', date: nowLabel(), note: '匯入筆記圖片' }],
+            icon: '🖼️',
+            note: '',
+            favorite: false,
+            isDemo: false,
+            size: file.size || 0,
+            addedAt: Date.now() + count,
+            lastOpenedAt: Date.now() + count,
+            content: dataUrl
+          };
+          works.unshift(item);
+          await dbPut(STORE_WORKS, item);
+          count++;
+        }
+
+        for (const entry of urlEntries) {
+          const directUrl = normalizeImageUrl(entry.url);
+          const guess = inferSuggestion(entry.cleanLabel, entry.title, '', 'image');
+          const tags = Array.from(new Set([...(grade !== '未分類' ? [grade] : []), ...(topic ? [topic] : []), ...guess.tags]));
+          const item = {
+            id: 'note_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+            title: entry.title,
+            filename: entry.cleanLabel,
+            url: directUrl,
+            path: entry.url,
+            type: 'image',
+            folderId: 'f_chem',
+            category: '化學教學',
+            isTeaching,
+            tags,
+            topic: topic || '重點筆記',
+            version: 'v1.0',
+            history: [{ version: 'v1.0', date: nowLabel(), note: '匯入筆記圖片連結' }],
+            icon: '🖼️',
+            note: '',
+            favorite: false,
+            isDemo: false,
+            size: 0,
+            addedAt: Date.now() + count,
+            lastOpenedAt: Date.now() + count,
+            content: ''
+          };
+          works.unshift(item);
+          await dbPut(STORE_WORKS, item);
+          count++;
+        }
+
+        stagedNoteFiles = [];
+        $('noteUrlsTextarea').value = '';
+        $('stagedNotesSummary').style.display = 'none';
+        closeImportModal();
+        renderAll();
+        switchPage('notes');
+        markDirty();
+        showToast(`成功加入 ${count} 張筆記圖片`);
+      }
+
+      // Excel-compatible CSV Import / Export (UTF-8 with BOM)
+      function csvEscape(val) {
+        const str = String(val ?? '');
+        if (/[",\r\n]/.test(str)) return '"' + str.replace(/"/g, '""') + '"';
+        return str;
+      }
+
+      function parseCsvRows(text) {
+        const clean = String(text || '').replace(/^\uFEFF/, '');
+        const rows = [];
+        let row = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < clean.length; i++) {
+          const ch = clean[i];
+          const next = clean[i + 1];
+          if (inQuotes) {
+            if (ch === '"' && next === '"') { cur += '"'; i++; }
+            else if (ch === '"') { inQuotes = false; }
+            else { cur += ch; }
+          } else {
+            if (ch === '"') { inQuotes = true; }
+            else if (ch === ',') { row.push(cur); cur = ''; }
+            else if (ch === '\r' && next === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; i++; }
+            else if (ch === '\n' || ch === '\r') { row.push(cur); rows.push(row); row = []; cur = ''; }
+            else { cur += ch; }
+          }
+        }
+        if (cur.length > 0 || row.length > 0) { row.push(cur); rows.push(row); }
+        return rows.filter((r) => r.some((cell) => cell.trim() !== ''));
+      }
+
+      function downloadCsvFile(filename, rows) {
+        const csvStr = '\uFEFF' + rows.map((r) => r.map(csvEscape).join(',')).join('\r\n');
+        const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      function exportExcelCsv() {
+        const header = ['名稱', '類型(html/py/web/image)', '檔名或網址', '資料夾', '主題', '年級與課題標籤', '課題(筆記用)', '課堂用(Y/N)', '圖示', '版本', '備註', '常用(Y/N)'];
+        const rows = [header];
+        works.forEach((w) => {
+          const folderName = getFolderById(w.folderId).name;
+          const linkOrFile = w.type === 'web' ? (w.url || w.filename) : (w.type === 'image' && w.url ? w.url : w.filename);
+          rows.push([
+            w.title || '',
+            w.type || 'html',
+            linkOrFile || '',
+            folderName,
+            w.category || '其他',
+            (w.tags || []).join(', '),
+            w.topic || '',
+            isTeachingItem(w) ? 'Y' : 'N',
+            w.icon || '',
+            w.version || 'v1.0',
+            w.note || '',
+            w.favorite ? 'Y' : 'N'
+          ]);
+        });
+        downloadCsvFile(`ai_works_hub_excel_${new Date().toISOString().slice(0, 10)}.csv`, rows);
+        showToast(`已匯出 ${works.length} 筆 Excel 清單 (.csv)`);
+      }
+
+      function downloadExcelTemplate() {
+        const rows = [
+          ['名稱', '類型(html/py/web/image)', '檔名或網址', '資料夾', '主題', '年級與課題標籤', '課題(筆記用)', '課堂用(Y/N)', '圖示', '版本', '備註', '常用(Y/N)'],
+          ['F.5 電解互動平台', 'web', 'https://your-site.netlify.app/electrolysis', '化學互動平台', '化學教學', 'F.5, HKDSE, 電解', '', 'Y', '🧪', 'v1.0', '上課示範用', 'Y'],
+          ['鬥獸棋', 'html', 'animal_chess.html', '親子桌遊', '親子遊戲', '桌遊', '', 'N', '🦁', 'v1.0', '同仔仔玩', 'Y'],
+          ['F.5 電解重點筆記', 'image', 'https://drive.google.com/file/d/你的檔案ID/view', '化學互動平台', '化學教學', 'F.5, HKDSE', '電解', 'Y', '🖼️', 'v1.0', 'Gemini 生成溫習圖', 'N']
+        ];
+        downloadCsvFile('ai_works_hub_template.csv', rows);
+        showToast('已下載 Excel 空白範本 (.csv)');
+      }
+
+      async function importExcelCsvFile(file) {
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const rows = parseCsvRows(text);
+          if (rows.length < 2) return showToast('Excel 檔案沒有可匯入的資料列');
+          let added = 0;
+          let updated = 0;
+
+          for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i].map((c) => c.trim());
+            const title = cols[0];
+            let type = (cols[1] || '').toLowerCase();
+            const rawRef = cols[2] || '';
+            const folderName = cols[3] || '';
+            const category = cols[4] || '';
+            const tags = (cols[5] || '').split(/[,，]/).map((t) => t.trim()).filter(Boolean);
+            const topic = cols[6] || '';
+            const teachFlag = cols[7] ? /^y|yes|true|1|是$/i.test(cols[7]) : null;
+            const icon = cols[8] || '';
+            const version = cols[9] || 'v1.0';
+            const note = cols[10] || '';
+            const favFlag = cols[11] ? /^y|yes|true|1|是$/i.test(cols[11]) : false;
+
+            if (!title && !rawRef) continue;
+
+            // Auto-detect type if empty
+            if (!['html', 'py', 'web', 'image'].includes(type)) {
+              if (/\.(jpe?g|png|webp|gif)$/i.test(rawRef) || /drive\.google\.com/i.test(rawRef)) type = 'image';
+              else if (/^https?:\/\//i.test(rawRef)) type = 'web';
+              else if (/\.py$/i.test(rawRef)) type = 'py';
+              else type = 'html';
+            }
+
+            // Ensure folder exists
+            let folderId = 'f_other';
+            if (folderName) {
+              let fObj = folders.find((f) => f.name.toLowerCase() === folderName.toLowerCase());
+              if (!fObj) {
+                fObj = { id: 'f_' + Date.now() + '_' + i, name: folderName, icon: '📁', color: FOLDER_COLORS[folders.length % FOLDER_COLORS.length], order: folders.length };
+                folders.splice(Math.max(0, folders.length - 1), 0, fObj);
+                await persistFolderOrder();
+              }
+              folderId = fObj.id;
+            } else {
+              folderId = inferSuggestion(rawRef, title, '', type).folderId;
+            }
+
+            const isUrl = /^https?:\/\//i.test(rawRef);
+            const cleanRef = isUrl ? cleanUrlLabel(rawRef) : rawRef;
+            const existing = works.find((w) =>
+              !w.isDemo && (
+                (cleanRef && w.filename.toLowerCase() === cleanRef.toLowerCase()) ||
+                (isUrl && w.url && w.url.toLowerCase() === rawRef.toLowerCase())
+              )
+            );
+
+            if (existing) {
+              if (title) existing.title = title;
+              existing.folderId = folderId;
+              if (category) existing.category = category;
+              if (tags.length > 0) existing.tags = Array.from(new Set([...(existing.tags || []), ...tags]));
+              if (topic) existing.topic = topic;
+              if (teachFlag !== null) existing.isTeaching = teachFlag;
+              if (icon) existing.icon = icon;
+              if (version) existing.version = version;
+              if (note) existing.note = note;
+              existing.favorite = favFlag || existing.favorite;
+              if (type === 'image' && isUrl && !existing.content) existing.url = normalizeImageUrl(rawRef);
+              if (type === 'web' && isUrl) { existing.type = 'web'; existing.url = rawRef; existing.path = rawRef; }
+              await dbPut(STORE_WORKS, existing);
+              updated++;
+            } else {
+              const guess = inferSuggestion(rawRef, title, '', type);
+              const finalUrl = type === 'image' && isUrl ? normalizeImageUrl(rawRef) : (isUrl ? rawRef : '');
+              const item = {
+                id: (type === 'image' ? 'note_' : 'w_') + Date.now() + '_' + Math.random().toString(36).slice(2, 8),
+                title: title || cleanRef,
+                filename: cleanRef || title,
+                url: finalUrl,
+                openMode: 'newtab',
+                path: rawRef || title,
+                type,
+                folderId,
+                category: category || guess.category,
+                isTeaching: teachFlag !== null ? teachFlag : (guess.isTeaching || type === 'image'),
+                tags: tags.length > 0 ? tags : guess.tags,
+                topic: topic || (type === 'image' ? '重點筆記' : ''),
+                version,
+                history: [{ version, date: nowLabel(), note: '從 Excel (.csv) 匯入' }],
+                icon: icon || (type === 'image' ? '🖼️' : guess.icon),
+                note,
+                favorite: favFlag,
+                isDemo: false,
+                size: 0,
+                addedAt: Date.now() + i,
+                lastOpenedAt: Date.now() + i,
+                content: ''
+              };
+              works.unshift(item);
+              await dbPut(STORE_WORKS, item);
+              added++;
+            }
+          }
+
+          renderAll();
+          $('settingsModal').classList.remove('open');
+          showToast(`📊 Excel 匯入完成：新增 ${added} 筆、更新 ${updated} 筆`);
+        } catch (err) {
+          showToast('讀取 Excel (.csv) 失敗，請確認檔案格式');
+        }
+      }
+
+
+      // Compact Zero-Dependency QR Code Encoder (ISO/IEC 18004 Byte Mode, ECC-L, V1-V10)
+      const QRGen = (function () {
+        const EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+        for (let i = 0, x = 1; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 256) x ^= 285; }
+        for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+        const mul = (a, b) => (a && b) ? EXP[LOG[a] + LOG[b]] : 0;
+        // [version, totalDataBytes, ecBytesPerBlock, numBlocksGroup1, dataBytesGroup1, numBlocksGroup2, dataBytesGroup2, alignCenters]
+        const VER = [
+          null,
+          [1, 19, 7, 1, 19, 0, 0, []],
+          [2, 34, 10, 1, 34, 0, 0, [6, 18]],
+          [3, 55, 15, 1, 55, 0, 0, [6, 22]],
+          [4, 80, 20, 1, 80, 0, 0, [6, 26]],
+          [5, 108, 26, 1, 108, 0, 0, [6, 30]],
+          [6, 136, 18, 2, 68, 0, 0, [6, 34]],
+          [7, 156, 20, 2, 78, 0, 0, [6, 22, 38]],
+          [8, 194, 24, 2, 97, 0, 0, [6, 24, 42]],
+          [9, 232, 30, 2, 116, 0, 0, [6, 26, 46]],
+          [10, 274, 18, 2, 68, 2, 69, [6, 28, 50]]
+        ];
+        function rsGen(deg) {
+          let p = [1];
+          for (let i = 0; i < deg; i++) {
+            const np = new Array(p.length + 1).fill(0);
+            for (let j = 0; j < p.length; j++) { np[j] ^= p[j]; np[j + 1] ^= mul(p[j], EXP[i]); }
+            p = np;
+          }
+          return p;
+        }
+        function rsEnc(data, ecLen) {
+          const gen = rsGen(ecLen);
+          const buf = data.concat(new Array(ecLen).fill(0));
+          for (let i = 0; i < data.length; i++) {
+            const coef = buf[i];
+            if (coef) for (let j = 0; j < gen.length; j++) buf[i + j] ^= mul(gen[j], coef);
+          }
+          return buf.slice(data.length);
+        }
+        function encode(text) {
+          const bytes = Array.from(new TextEncoder().encode(String(text || '')));
+          let spec = null;
+          for (let v = 1; v <= 10; v++) {
+            const hdr = v < 10 ? 2 : 3;
+            if (bytes.length + hdr <= VER[v][1]) { spec = VER[v]; break; }
+          }
+          if (!spec) spec = VER[10];
+          const [v, cap, ecLen, b1, d1, b2, d2, align] = spec;
+          const maxBytes = cap - (v < 10 ? 2 : 3);
+          const payload = bytes.slice(0, maxBytes);
+
+          // Bit stream: 0100 (byte mode) + length (8 or 16 bits) + payload + terminator
+          const bits = [];
+          const push = (val, len) => { for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1); };
+          push(4, 4);
+          push(payload.length, v < 10 ? 8 : 16);
+          payload.forEach((b) => push(b, 8));
+          for (let i = 0; i < 4 && bits.length < cap * 8; i++) bits.push(0);
+          while (bits.length % 8) bits.push(0);
+          const codewords = [];
+          for (let i = 0; i < bits.length; i += 8) {
+            let b = 0;
+            for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j];
+            codewords.push(b);
+          }
+          let padToggle = 0;
+          while (codewords.length < cap) codewords.push(padToggle++ % 2 ? 0x11 : 0xec);
+
+          // Split blocks & compute RS ECC
+          const dBlocks = [], eBlocks = [];
+          let off = 0;
+          for (let i = 0; i < b1; i++) { const blk = codewords.slice(off, off + d1); off += d1; dBlocks.push(blk); eBlocks.push(rsEnc(blk, ecLen)); }
+          for (let i = 0; i < b2; i++) { const blk = codewords.slice(off, off + d2); off += d2; dBlocks.push(blk); eBlocks.push(rsEnc(blk, ecLen)); }
+          const finalBytes = [];
+          const maxD = Math.max(d1, d2);
+          for (let i = 0; i < maxD; i++) dBlocks.forEach((blk) => { if (i < blk.length) finalBytes.push(blk[i]); });
+          for (let i = 0; i < ecLen; i++) eBlocks.forEach((blk) => finalBytes.push(blk[i]));
+
+          const size = v * 4 + 17;
+          const m = Array.from({ length: size }, () => new Int8Array(size));
+          const res = Array.from({ length: size }, () => new Uint8Array(size));
+          const setMod = (r, c, val, isRes) => {
+            if (r < 0 || c < 0 || r >= size || c >= size) return;
+            m[r][c] = val ? 1 : 0;
+            if (isRes) res[r][c] = 1;
+          };
+          const finder = (r0, c0) => {
+            for (let dr = -1; dr <= 7; dr++) for (let dc = -1; dc <= 7; dc++) {
+              const inB = dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6;
+              const dark = inB && (dr === 0 || dr === 6 || dc === 0 || dc === 6 || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4));
+              setMod(r0 + dr, c0 + dc, dark, true);
+            }
+          };
+          finder(0, 0); finder(0, size - 7); finder(size - 7, 0);
+          for (let i = 8; i < size - 8; i++) { setMod(6, i, i % 2 === 0, true); setMod(i, 6, i % 2 === 0, true); }
+          for (const ar of align) for (const ac of align) {
+            if (res[ar][ac]) continue;
+            for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
+              setMod(ar + dr, ac + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1, true);
+            }
+          }
+          // Reserve format & dark module + version info (v >= 7)
+          for (let i = 0; i < 9; i++) { res[8][i] = 1; res[i][8] = 1; }
+          for (let i = size - 8; i < size; i++) { res[8][i] = 1; res[i][8] = 1; }
+          setMod(size - 8, 8, 1, true);
+          if (v >= 7) {
+            let rem = v;
+            for (let i = 0; i < 12; i++) rem = (rem << 1) ^ ((rem >> 11) * 0x1f25);
+            const vBits = (v << 12) | rem;
+            for (let i = 0; i < 18; i++) {
+              const bit = (vBits >> i) & 1;
+              const a = Math.floor(i / 3), b = size - 11 + (i % 3);
+              setMod(a, b, bit, true); setMod(b, a, bit, true);
+            }
+          }
+
+          // Place data bits (mask 0: (r + c) % 2 === 0)
+          let bitIdx = 0;
+          const totalBits = finalBytes.length * 8;
+          for (let col = size - 1; col > 0; col -= 2) {
+            if (col === 6) col--;
+            const upward = (((size - 1 - col) >> 1) & 1) === 0;
+            for (let step = 0; step < size; step++) {
+              const r = upward ? size - 1 - step : step;
+              for (let dx = 0; dx < 2; dx++) {
+                const c = col - dx;
+                if (res[r][c]) continue;
+                let bit = 0;
+                if (bitIdx < totalBits) bit = (finalBytes[bitIdx >> 3] >> (7 - (bitIdx & 7))) & 1;
+                bitIdx++;
+                if ((r + c) % 2 === 0) bit ^= 1;
+                m[r][c] = bit;
+              }
+            }
+          }
+          // Format info for ECC-L (01) + Mask 0 (000) => 01000 => 15-bit BCH + XOR 0x5412 = 0x77c4
+          const fmt = 0x77c4;
+          for (let i = 0; i < 6; i++) setMod(8, i, (fmt >> (14 - i)) & 1, true);
+          setMod(8, 7, (fmt >> 8) & 1, true);
+          setMod(8, 8, (fmt >> 7) & 1, true);
+          setMod(7, 8, (fmt >> 6) & 1, true);
+          for (let i = 0; i < 6; i++) setMod(5 - i, 8, (fmt >> (5 - i)) & 1, true);
+          for (let i = 0; i < 7; i++) setMod(size - 1 - i, 8, (fmt >> (14 - i)) & 1, true);
+          for (let i = 0; i < 8; i++) setMod(8, size - 8 + i, (fmt >> (7 - i)) & 1, true);
+          return { size, matrix: m };
+        }
+        return { encode };
+      })();
+
+      // === QR Code Modal ===
+      function openQrModal(title, url) {
+        if (!url) return showToast('此項目沒有線上網址');
+        currentQrUrl = url;
+        $('qrItemTitle').textContent = title || url;
+        $('qrUrlText').textContent = url;
+        const canvas = $('qrCanvas');
+        const ctx = canvas.getContext('2d');
+        const qr = QRGen.encode(url);
+        const quiet = 4;
+        const total = qr.size + quiet * 2;
+        const pxSize = 260;
+        const cell = Math.floor(pxSize / total);
+        const finalSize = cell * total;
+        canvas.width = finalSize;
+        canvas.height = finalSize;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, finalSize, finalSize);
+        ctx.fillStyle = '#0f172a';
+        for (let r = 0; r < qr.size; r++) {
+          for (let c = 0; c < qr.size; c++) {
+            if (qr.matrix[r][c]) {
+              ctx.fillRect((c + quiet) * cell, (r + quiet) * cell, cell, cell);
+            }
+          }
+        }
+        $('qrModal').classList.add('open');
+      }
+
+      // === Lesson Playlists ===
+      function savePlaylists() {
+        try { localStorage.setItem('ai_hub_playlists', JSON.stringify(playlists)); } catch (e) {}
+        const el = $('railPlaylistCount');
+        if (el) el.textContent = String(playlists.length);
+      }
+
+      function loadPlaylists() {
+        try {
+          const raw = localStorage.getItem('ai_hub_playlists');
+          if (raw) {
+            const arr = JSON.parse(raw);
+            if (Array.isArray(arr)) playlists = arr;
+          }
+        } catch (e) {}
+        if (playlists.length === 0 && works.some((w) => w.isDemo)) {
+          const demoIds = ['demo_chem_platform', 'demo_note_electrolysis', 'demo_web_link'].filter((id) => works.some((w) => w.id === id));
+          if (demoIds.length > 0) {
+            playlists = [{ id: 'pl_demo', name: 'F.5 電解示範課堂流程包', itemIds: demoIds }];
+          }
+        }
+        const el = $('railPlaylistCount');
+        if (el) el.textContent = String(playlists.length);
+      }
+
+      function openPlaylistModal() {
+        renderPlaylistModal();
+        $('playlistModal').classList.add('open');
+      }
+
+      function renderPlaylistModal() {
+        const listWrap = $('playlistListWrap');
+        if (playlists.length === 0) {
+          listWrap.innerHTML = '<div style="font-size:0.83rem; color:var(--text-muted); padding:8px 2px;">尚未建立課堂流程包，可在下方勾選作品建立第一組。</div>';
+        } else {
+          listWrap.innerHTML = playlists.map((pl) => {
+            const validItems = pl.itemIds.map((id) => works.find((w) => w.id === id)).filter(Boolean);
+            const names = validItems.map((w) => w.icon + ' ' + w.title).join(' → ');
+            return `
+              <div class="playlist-card">
+                <div class="playlist-meta">
+                  <div class="playlist-name">🎬 ${escapeHtml(pl.name)} <span class="count-pill">${validItems.length} 頁</span></div>
+                  <div class="playlist-sub">${escapeHtml(names || '（內含項目已移除）')}</div>
+                </div>
+                <div style="display:flex; gap:6px; flex-shrink:0;">
+                  <button type="button" class="btn-primary" data-play-pl="${escapeHtml(pl.id)}" style="height:33px; padding:0 12px; font-size:0.8rem;">▶ 播放</button>
+                  <button type="button" class="demo-clear-btn" data-del-pl="${escapeHtml(pl.id)}">刪除</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        const picker = $('playlistItemPicker');
+        const allSelectable = [...works].sort((a, b) => (isTeachingItem(b) ? 1 : 0) - (isTeachingItem(a) ? 1 : 0));
+        picker.innerHTML = allSelectable.map((w) => `
+          <label class="playlist-pick-row">
+            <input type="checkbox" value="${escapeHtml(w.id)}" />
+            <span>${escapeHtml(w.icon || '📄')}</span>
+            <span style="flex:1; font-weight:600; color:var(--text);">${escapeHtml(w.title)}</span>
+            <span class="type-badge ${w.type === 'html' ? 'type-html' : w.type === 'py' ? 'type-py' : 'type-web'}">${w.type === 'image' ? '筆記圖' : w.type.toUpperCase()}</span>
+          </label>
+        `).join('');
+      }
+
+      function startPresenter(plId) {
+        const pl = playlists.find((p) => p.id === plId);
+        if (!pl) return;
+        const items = pl.itemIds.map((id) => works.find((w) => w.id === id)).filter(Boolean);
+        if (items.length === 0) return showToast('此流程包內沒有可播放的項目');
+        presenterPlaylist = { name: pl.name, items };
+        presenterIndex = 0;
+        $('playlistModal').classList.remove('open');
+        renderPresenterStep();
+        $('presenterOverlay').classList.add('open');
+        $('presenterOverlay').setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function renderPresenterStep() {
+        if (!presenterPlaylist) return;
+        const items = presenterPlaylist.items;
+        const w = items[presenterIndex];
+        $('presenterPlaylistName').textContent = presenterPlaylist.name;
+        $('presenterStepInfo').textContent = `第 ${presenterIndex + 1} / ${items.length} 頁 · ${w.title}`;
+        $('presenterStepSelect').innerHTML = items.map((it, idx) =>
+          `<option value="${idx}" ${idx === presenterIndex ? 'selected' : ''}>${idx + 1}. ${escapeHtml(it.title)}</option>`
+        ).join('');
+        $('presenterQrBtn').style.display = w.type === 'web' ? 'inline-flex' : 'none';
+
+        const stage = $('presenterStage');
+        if (w.type === 'html') {
+          stage.innerHTML = `<iframe class="viewer-frame" id="presenterIframe" title="${escapeHtml(w.title)}"></iframe>`;
+          $('presenterIframe').srcdoc = w.content || '';
+        } else if (w.type === 'image') {
+          const src = w.content || normalizeImageUrl(w.url || w.path);
+          stage.innerHTML = `<div style="flex:1; display:flex; align-items:center; justify-content:center; padding:16px; background:#0b1120;"><img src="${escapeHtml(src)}" alt="${escapeHtml(w.title)}" style="max-width:100%; max-height:calc(100vh - 96px); object-fit:contain; border-radius:8px;" /></div>`;
+        } else if (w.type === 'py') {
+          stage.innerHTML = `<div class="py-viewer-body"><pre class="py-code-box">${escapeHtml(w.content || '')}</pre></div>`;
+        } else if (w.type === 'web') {
+          const url = w.url || w.path;
+          stage.innerHTML = `<div class="split-empty" style="max-width:440px;"><div style="font-size:2.4rem; margin-bottom:10px;">🌐</div><div style="font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:8px;">${escapeHtml(w.title)}</div><div class="qr-url-pill" style="margin-bottom:14px;">${escapeHtml(url)}</div><div style="display:flex; gap:10px; justify-content:center;"><a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn-primary" style="text-decoration:none;">在新分頁開啟 ↗</a><button type="button" class="btn-secondary" id="presenterInlineQrBtn">📱 顯示學生掃碼 QR</button></div></div>`;
+          const b = $('presenterInlineQrBtn');
+          if (b) b.addEventListener('click', () => openQrModal(w.title, url));
+        }
+      }
+
+      function closePresenter() {
+        $('presenterOverlay').classList.remove('open');
+        $('presenterOverlay').setAttribute('aria-hidden', 'true');
+        $('presenterStage').innerHTML = '';
+        presenterPlaylist = null;
+        document.body.style.overflow = '';
+      }
+
+      // === Auto Background Cloud Sync ===
+      let isTwoWaySyncing = false;
+
+      function updateSyncIndicators(state, label) {
+        const dot = $('headerSyncDot');
+        const btn = $('headerSyncNowBtn');
+        const hTxt = $('headerSyncText');
+        const stripTxt = $('mainSyncBadgeText');
+        if (dot) dot.className = 'sync-dot' + (state ? ' ' + state : '');
+        if (btn) btn.classList.toggle('syncing', state === 'busy');
+        if (hTxt) hTxt.textContent = state === 'busy' ? '同步中...' : state === 'dirty' ? '有新變更' : '即時同步';
+        if (stripTxt && label) stripTxt.textContent = label;
+      }
+
+      function refreshSyncBannerFromStorage() {
+        let token = '', gistId = '', last = '';
+        try {
+          token = localStorage.getItem('ai_hub_gh_token') || '';
+          gistId = localStorage.getItem('ai_hub_gh_gist') || '';
+          last = localStorage.getItem('ai_hub_gh_last') || '';
+        } catch (e) {}
+        if (!token && !gistId) {
+          updateSyncIndicators('', '雲端同步：尚未連結（點設定貼入同步 ID）');
+        } else if (hasUnsyncedChanges) {
+          updateSyncIndicators('dirty', '🟠 有未同步變動（點右側立即雙向同步）');
+        } else if (last) {
+          updateSyncIndicators('ok', '🟢 雲端已同步：' + last);
+        } else {
+          updateSyncIndicators('ok', '🟢 已連結雲端同步');
+        }
+      }
+
+      async function syncTwoWayNow(silent) {
+        if (isTwoWaySyncing) return;
+        let token = '', gistId = '';
+        try {
+          token = ($('syncTokenInput') && $('syncTokenInput').value.trim()) || localStorage.getItem('ai_hub_gh_token') || '';
+          gistId = ($('syncGistIdInput') && $('syncGistIdInput').value.trim()) || localStorage.getItem('ai_hub_gh_gist') || '';
+        } catch (e) {}
+        if (!token && !gistId) {
+          if (!silent) {
+            loadSyncConfig();
+            $('settingsModal').classList.add('open');
+            showToast('請先填入 GitHub Token 或匯入同步 ID');
+          }
+          return;
+        }
+        isTwoWaySyncing = true;
+        updateSyncIndicators('busy', '🔄 正在與雲端雙向即時同步...');
+        try {
+          if (gistId) {
+            const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
+              headers: token
+                ? { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' }
+                : { Accept: 'application/vnd.github+json' }
+            });
+            if (res.ok) {
+              const gist = await res.json();
+              const fileObj = gist.files && gist.files['ai_works_hub_sync.json'];
+              if (fileObj) {
+                let raw = fileObj.content;
+                if (fileObj.truncated && fileObj.raw_url) {
+                  const r2 = await fetch(fileObj.raw_url);
+                  raw = await r2.text();
+                }
+                await mergeBackupData(JSON.parse(raw));
+              }
+            }
+          }
+          if (token) {
+            const payloadStr = JSON.stringify(buildExportPayload());
+            const url = gistId ? `https://api.github.com/gists/${encodeURIComponent(gistId)}` : 'https://api.github.com/gists';
+            const method = gistId ? 'PATCH' : 'POST';
+            const res2 = await fetch(url, {
+              method,
+              headers: {
+                Authorization: `token ${token}`,
+                Accept: 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                description: 'AI Works Hub Cloud Sync Backup',
+                public: false,
+                files: { 'ai_works_hub_sync.json': { content: payloadStr } }
+              })
+            });
+            if (!res2.ok) throw new Error('HTTP ' + res2.status);
+            const result = await res2.json();
+            if (result.id && !gistId) {
+              $('syncGistIdInput').value = result.id;
+              try { localStorage.setItem('ai_hub_gh_gist', result.id); } catch (e) {}
+            }
+          }
+          clearDirty();
+          const ts = nowLabel();
+          try { localStorage.setItem('ai_hub_gh_last', ts); } catch (e) {}
+          updateSyncIndicators('ok', '🟢 雲端已同步：' + ts);
+          if (!silent) showToast('✅ 已完成雙向即時同步');
+        } catch (err) {
+          refreshSyncBannerFromStorage();
+          if (!silent) showToast('同步失敗，請檢查網絡或 Token');
+        } finally {
+          isTwoWaySyncing = false;
+        }
+      }
+
+      function scheduleAutoSyncPush() {
+        if (!autoSyncEnabled) return;
+        let token = '', gistId = '';
+        try {
+          token = localStorage.getItem('ai_hub_gh_token') || '';
+          gistId = localStorage.getItem('ai_hub_gh_gist') || '';
+        } catch (e) {}
+        if (!token || !gistId) return;
+        clearTimeout(autoPushTimer);
+        autoPushTimer = setTimeout(async () => {
+          try {
+            const payloadStr = JSON.stringify(buildExportPayload());
+            const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
+              method: 'PATCH',
+              headers: {
+                Authorization: `token ${token}`,
+                Accept: 'application/vnd.github+json',
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                description: 'AI Works Hub Cloud Sync Backup',
+                files: { 'ai_works_hub_sync.json': { content: payloadStr } }
+              })
+            });
+            if (res.ok) {
+              clearDirty();
+              const ts = nowLabel();
+              try { localStorage.setItem('ai_hub_gh_last', ts); } catch (e) {}
+              showToast('🔄 已自動背景上傳至雲端');
+            }
+          } catch (e) {}
+        }, 2000);
+      }
+
+      async function runAutoSyncPullOnStart() {
+        if (!autoSyncEnabled) return;
+        let token = '', gistId = '';
+        try {
+          token = localStorage.getItem('ai_hub_gh_token') || '';
+          gistId = localStorage.getItem('ai_hub_gh_gist') || '';
+        } catch (e) {}
+        if (!token || !gistId) return;
+        try {
+          const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
+            headers: { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' }
+          });
+          if (!res.ok) return;
+          const gist = await res.json();
+          const fileObj = gist.files && gist.files['ai_works_hub_sync.json'];
+          if (!fileObj) return;
+          let raw = fileObj.content;
+          if (fileObj.truncated && fileObj.raw_url) {
+            const r2 = await fetch(fileObj.raw_url);
+            raw = await r2.text();
+          }
+          await mergeBackupData(JSON.parse(raw));
+          const ts = nowLabel();
+          try { localStorage.setItem('ai_hub_gh_last', ts); } catch (e) {}
+          showToast('🔄 已自動同步最新雲端資料');
+        } catch (e) {}
+      }
+
+      function applySplitMode(enabled) {
+        splitMode = enabled;
+        document.body.classList.toggle('split-mode', enabled);
+        $('splitToggleBtn').classList.toggle('active', enabled);
+        try { localStorage.setItem('ai_hub_split', enabled ? '1' : '0'); } catch (e) {}
+        renderCards();
+      }
+
+      function renderSideRail() {
+        const appsOnly = getAppsWorks();
+        const visibleApps = getVisiblePool();
+        const visibleNotes = getVisibleNotesPool();
+        $('railAppsCount').textContent = String(visibleApps.length);
+        $('railNotesCount').textContent = String(visibleNotes.length);
+        $('railTabApps').classList.toggle('active', activePage === 'apps');
+        $('railTabNotes').classList.toggle('active', activePage === 'notes');
+        $('mnavApps').classList.toggle('active', activePage === 'apps');
+        $('mnavNotes').classList.toggle('active', activePage === 'notes');
+        $('mnavClass').classList.toggle('active', classroomMode);
+
+        $('railFoldersGroup').style.display = classroomMode || activePage === 'notes' ? 'none' : 'flex';
+        const allItem = `<button type="button" class="rail-item ${activeFolder === 'all' ? 'active' : ''}" data-rail-folder="all">` +
+          `<span class="rail-item-left"><span>🗂️</span><span>全部資料夾</span></span><span class="rail-count">${appsOnly.length}</span></button>`;
+        const fItems = folders.map((f) => {
+          const cnt = appsOnly.filter((w) => w.folderId === f.id).length;
+          return `<button type="button" class="rail-item ${activeFolder === f.id ? 'active' : ''}" data-rail-folder="${escapeHtml(f.id)}">` +
+            `<span class="rail-item-left"><span style="width:8px;height:8px;border-radius:50%;background:${escapeHtml(f.color || '#2563eb')};flex-shrink:0;"></span><span>${escapeHtml(f.icon)} ${escapeHtml(f.name)}</span></span>` +
+            `<span class="rail-count">${cnt}</span></button>`;
+        }).join('');
+        $('railFolderList').innerHTML = allItem + fItems;
+
+        const curGrade = activePage === 'notes' ? notesGradeFilter : activeQuickTag;
+        const pool = activePage === 'notes' ? visibleNotes : visibleApps;
+        $('railGradeList').innerHTML =
+          `<button type="button" class="tag-pill ${curGrade === 'all' ? 'active' : ''}" data-rail-grade="all">全部</button>` +
+          GRADE_PRESETS.map((g) => {
+            const cnt = pool.filter((w) => (w.tags || []).includes(g)).length;
+            return `<button type="button" class="tag-pill ${curGrade === g ? 'active' : ''}" data-rail-grade="${g}">${g} (${cnt})</button>`;
+          }).join('');
+      }
+
+      function openInSplitPreview(id) {
+        const w = works.find((item) => item.id === id);
+        if (!w) return false;
+        if (!splitMode || window.innerWidth < 760) return false;
+        activePreviewId = id;
+        w.lastOpenedAt = Date.now();
+        dbPut(STORE_WORKS, w);
+
+        $('splitPreviewTitle').textContent = w.title;
+        $('splitPreviewSub').textContent = w.filename;
+        $('splitExpandBtn').style.display = 'inline-flex';
+        const body = $('splitPreviewBody');
+
+        if (w.type === 'image') {
+          const src = w.content || normalizeImageUrl(w.url || w.path);
+          body.innerHTML = `<div class="split-img-wrap"><img class="split-img" id="splitPreviewImg" src="${escapeHtml(src)}" alt="${escapeHtml(w.title)}" /></div>`;
+          const imgEl = $('splitPreviewImg');
+          if (imgEl) imgEl.addEventListener('click', () => openLightbox(w.id));
+        } else if (w.type === 'html') {
+          body.innerHTML = `<iframe class="split-iframe" id="splitPreviewFrame" title="${escapeHtml(w.title)}"></iframe>`;
+          $('splitPreviewFrame').srcdoc = w.content || '';
+        } else if (w.type === 'py') {
+          body.innerHTML = `<div style="padding:14px; overflow:auto; flex:1;"><pre class="py-code-box" style="margin:0;">${escapeHtml(w.content || '')}</pre></div>`;
+        } else if (w.type === 'web') {
+          const url = w.url || w.path;
+          body.innerHTML = `<div class="split-empty"><div style="font-size:2rem; margin-bottom:8px;">🌐</div><div style="font-weight:700; color:var(--text); margin-bottom:6px;">${escapeHtml(w.title)}</div><div style="font-family:var(--mono); font-size:0.76rem; margin-bottom:14px; word-break:break-all;">${escapeHtml(url)}</div><a href="${escapeHtml(url)}" target="_blank" rel="noopener" class="btn-primary" style="text-decoration:none;">在新分頁開啟網頁 ↗</a></div>`;
+        }
+
+        renderCards();
+        if (activePage === 'notes') renderNotesPage();
+        return true;
+      }
+
       function renderAll() {
         renderQuickStrip();
         renderFolders();
         renderQuickTagBar();
         renderCategories();
         renderCards();
+        renderNotesPage();
+        renderSideRail();
       }
 
       // Launch Work
-      async function openWork(id) {
+      async function openWork(id, forceFullscreen) {
         const w = works.find((item) => item.id === id);
         if (!w) return;
+        if (!forceFullscreen && openInSplitPreview(id)) return;
         w.lastOpenedAt = Date.now();
         await dbPut(STORE_WORKS, w);
         renderCards();
@@ -2226,8 +4382,10 @@
         });
         $('importTabFiles').style.display = tab === 'files' ? 'flex' : 'none';
         $('importTabWeb').style.display = tab === 'web' ? 'flex' : 'none';
+        $('importTabNotes').style.display = tab === 'notes' ? 'flex' : 'none';
         $('confirmImportBtn').style.display = tab === 'files' ? 'inline-flex' : 'none';
         $('confirmWebBtn').style.display = tab === 'web' ? 'inline-flex' : 'none';
+        $('confirmNotesBtn').style.display = tab === 'notes' ? 'inline-flex' : 'none';
       }
 
       function openImportModal() {
@@ -2577,6 +4735,7 @@
         await dbPut(STORE_WORKS, item);
         closeImportModal();
         renderAll();
+        markDirty();
         showToast('已加入網頁捷徑');
       }
 
@@ -2610,7 +4769,7 @@
       function renderFolderMgrList() {
         $('folderMgrList').innerHTML = folders
           .map((f, idx) => {
-            const cnt = works.filter((w) => w.folderId === f.id).length;
+            const cnt = getAppsWorks().filter((w) => w.folderId === f.id).length;
             const isDefaultOther = f.id === 'f_other';
             return `
               <div class="folder-mgr-item">
@@ -2676,6 +4835,7 @@
         await dbPut(STORE_WORKS, w);
         closeRenameModal();
         renderAll();
+        markDirty();
         showToast('已更新作品名稱');
       }
 
@@ -2748,6 +4908,7 @@
         await dbPut(STORE_WORKS, w);
         closeEditModal();
         renderAll();
+        markDirty();
         showToast('已更新作品資訊');
       }
 
@@ -2771,6 +4932,7 @@
           version: 3,
           exportedAt: new Date().toISOString(),
           folders,
+          playlists,
           works
         };
       }
@@ -2786,6 +4948,7 @@
         a.click();
         a.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
+        clearDirty();
         showToast('已開始下載完整備份檔');
       }
 
@@ -2815,9 +4978,17 @@
           if (!item.version) item.version = 'v1.0';
           if (!Array.isArray(item.tags)) item.tags = [];
           const idx = works.findIndex((w) => w.id === item.id || w.filename.toLowerCase() === item.filename.toLowerCase());
-          if (idx >= 0) works[idx] = item;
-          else works.unshift(item);
-          await dbPut(STORE_WORKS, item);
+          if (idx >= 0) {
+            const localItem = works[idx];
+            const localTime = Math.max(localItem.addedAt || 0, localItem.lastOpenedAt || 0);
+            const remoteTime = Math.max(item.addedAt || 0, item.lastOpenedAt || 0);
+            const merged = remoteTime >= localTime ? { ...localItem, ...item } : { ...item, ...localItem };
+            works[idx] = merged;
+            await dbPut(STORE_WORKS, merged);
+          } else {
+            works.unshift(item);
+            await dbPut(STORE_WORKS, item);
+          }
           count++;
         }
         renderAll();
@@ -2885,6 +5056,7 @@
           const ts = nowLabel();
           try { localStorage.setItem('ai_hub_gh_last', ts); } catch (e) {}
           $('syncStatusText').textContent = '上次上傳：' + ts;
+          clearDirty();
           showToast('☁️ 已同步上傳至 GitHub 雲端');
         } catch (err) {
           $('syncStatusText').textContent = '上傳失敗，請檢查 Token 或網絡';
@@ -2895,15 +5067,14 @@
       async function syncPullGist() {
         const token = $('syncTokenInput').value.trim();
         const gistId = $('syncGistIdInput').value.trim();
-        if (!token || !gistId) return showToast('請輸入 GitHub Token 與 Gist ID');
+        if (!gistId) return showToast('請輸入 Gist ID 或匯入同步 ID');
         saveSyncConfig();
         $('syncStatusText').textContent = '正在從雲端下載...';
         try {
           const res = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
-            headers: {
-              Authorization: `token ${token}`,
-              Accept: 'application/vnd.github+json'
-            }
+            headers: token
+              ? { Authorization: `token ${token}`, Accept: 'application/vnd.github+json' }
+              : { Accept: 'application/vnd.github+json' }
           });
           if (!res.ok) throw new Error('HTTP ' + res.status);
           const gist = await res.json();
@@ -2926,6 +5097,65 @@
       }
 
       // Copy fallback
+      function exportSyncId() {
+        const token = $('syncTokenInput').value.trim();
+        const gistId = $('syncGistIdInput').value.trim();
+        if (!token && !gistId) return showToast('請先填入 Token 或上傳一次以取得 Gist ID');
+        saveSyncConfig();
+        try {
+          const payload = JSON.stringify({ t: token, g: gistId, a: autoSyncEnabled ? 1 : 0 });
+          const encoded = btoa(unescape(encodeURIComponent(payload)));
+          const syncId = 'AIHUB-SYNC-' + encoded;
+          copyText(syncId);
+          showToast('🔑 已複製完整同步 ID，可貼到電腦或另一部手機匯入');
+        } catch (e) {
+          showToast('產生同步 ID 失敗');
+        }
+      }
+
+      async function confirmImportSyncId() {
+        const raw = $('importSyncIdTextarea').value.trim();
+        if (!raw) return showToast('請貼上同步 ID 或 Gist ID');
+        let importedToken = '';
+        let importedGist = '';
+        let importedAuto = null;
+
+        if (raw.startsWith('AIHUB-SYNC-')) {
+          try {
+            const b64 = raw.slice('AIHUB-SYNC-'.length).replace(/\s+/g, '');
+            const obj = JSON.parse(decodeURIComponent(escape(atob(b64))));
+            importedToken = String(obj.t || '').trim();
+            importedGist = String(obj.g || '').trim();
+            if (typeof obj.a === 'number') importedAuto = obj.a === 1;
+          } catch (e) {
+            return showToast('同步 ID 格式無效，請重新複製完整字串');
+          }
+        } else {
+          // Accept plain Gist ID or full gist.github.com URL
+          const urlMatch = raw.match(/gist\.github\.com\/(?:[^\/]+\/)?([a-f0-9]{16,})/i);
+          if (urlMatch) importedGist = urlMatch[1];
+          else if (/^ghp_[a-zA-Z0-9_]+$/.test(raw)) importedToken = raw;
+          else importedGist = raw.replace(/\s+/g, '');
+        }
+
+        if (importedToken) $('syncTokenInput').value = importedToken;
+        if (importedGist) $('syncGistIdInput').value = importedGist;
+        if (importedAuto !== null) {
+          autoSyncEnabled = importedAuto;
+          $('autoSyncCheck').checked = autoSyncEnabled;
+          try { localStorage.setItem('ai_hub_autosync', autoSyncEnabled ? '1' : '0'); } catch (e) {}
+        }
+        saveSyncConfig();
+        $('syncIdModal').classList.remove('open');
+        $('importSyncIdTextarea').value = '';
+
+        if ($('importSyncPullNowCheck').checked && $('syncGistIdInput').value.trim()) {
+          await syncPullGist();
+        } else {
+          showToast('✅ 已匯入同步 ID 設定');
+        }
+      }
+
       function copyText(text) {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(() => showToast('已複製程式碼'), () => fallbackCopy(text));
@@ -2955,6 +5185,231 @@
       }
 
       function bindEvents() {
+        // Page Switcher & Quick Excel Button
+        // v7.0 Quick Strip Mode, Topic Toggle, Inline Reset, Batch Pro, Shortcuts
+        document.querySelectorAll('[data-qmode]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            quickStripMode = btn.getAttribute('data-qmode');
+            renderQuickStrip();
+          });
+        });
+
+        $('toggleTopicFilterBtn').addEventListener('click', () => {
+          showTopicRow = !showTopicRow;
+          renderCategories();
+          $('toggleTopicFilterBtn').textContent = showTopicRow ? '收合主題分類 ▴' : '顯示主題分類 ▾';
+        });
+
+        $('inlineResetFiltersBtn').addEventListener('click', () => $('emptyResetBtn').click());
+
+        $('batchTagBtn').addEventListener('click', async () => {
+          const grade = $('batchGradeSelect').value;
+          if (!grade) return showToast('請先選擇要加上的年級標籤');
+          if (selectedBatchIds.size === 0) return showToast('請先勾選作品');
+          for (const id of selectedBatchIds) {
+            const w = works.find((x) => x.id === id);
+            if (w) {
+              if (!Array.isArray(w.tags)) w.tags = [];
+              if (!w.tags.includes(grade)) w.tags.push(grade);
+              w.isTeaching = true;
+              await dbPut(STORE_WORKS, w);
+            }
+          }
+          const n = selectedBatchIds.size;
+          $('batchGradeSelect').value = '';
+          markDirty();
+          renderAll();
+          showToast(`已為 ${n} 個作品加上「${grade}」標籤`);
+        });
+
+        $('batchTeachBtn').addEventListener('click', async () => {
+          if (selectedBatchIds.size === 0) return showToast('請先勾選作品');
+          for (const id of selectedBatchIds) {
+            const w = works.find((x) => x.id === id);
+            if (w) { w.isTeaching = true; await dbPut(STORE_WORKS, w); }
+          }
+          const n = selectedBatchIds.size;
+          markDirty();
+          renderAll();
+          showToast(`🎓 已將 ${n} 個作品設為課堂教學專用`);
+        });
+
+        // Keyboard shortcuts: '/' focuses search, 'Escape' closes open modals/runners
+        window.addEventListener('keydown', (e) => {
+          const tag = (e.target && e.target.tagName || '').toLowerCase();
+          if (e.key === '/' && tag !== 'input' && tag !== 'textarea' && tag !== 'select') {
+            e.preventDefault();
+            const input = activePage === 'notes' ? $('notesSearchInput') : $('searchInput');
+            if (input) input.focus();
+          } else if (e.key === 'Escape') {
+            ['importModal', 'folderModal', 'editModal', 'renameModal', 'confirmModal', 'settingsModal', 'playlistModal', 'qrModal', 'syncIdModal'].forEach((id) => {
+              $(id).classList.remove('open');
+            });
+            if ($('htmlRunnerOverlay').classList.contains('open')) closeHtmlRunner();
+            if ($('pyViewerOverlay').classList.contains('open')) closePyViewer();
+          }
+        });
+
+        // v7.0 Fold 7 Split Mode, Side Rail & Mobile Bottom Nav
+        $('splitToggleBtn').addEventListener('click', () => {
+          applySplitMode(!splitMode);
+          showToast(splitMode ? '◫ 已開啟雙欄即時預覽模式' : '已切換為全寬模式');
+        });
+        $('splitCloseBtn').addEventListener('click', () => applySplitMode(false));
+        $('splitExpandBtn').addEventListener('click', () => {
+          if (!activePreviewId) return;
+          const w = works.find((x) => x.id === activePreviewId);
+          if (!w) return;
+          if (w.type === 'image') openLightbox(w.id);
+          else openWork(w.id, true);
+        });
+
+        $('railTabApps').addEventListener('click', () => switchPage('apps'));
+        $('railTabNotes').addEventListener('click', () => switchPage('notes'));
+        $('railExcelBtn').addEventListener('click', () => { loadSyncConfig(); $('settingsModal').classList.add('open'); });
+        $('railManageFoldersBtn').addEventListener('click', openFolderModal);
+
+        $('railFolderList').addEventListener('click', (e) => {
+          const item = e.target.closest('[data-rail-folder]');
+          if (!item) return;
+          activeFolder = item.getAttribute('data-rail-folder');
+          if (activePage !== 'apps') switchPage('apps');
+          renderAll();
+        });
+
+        $('railGradeList').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-rail-grade]');
+          if (!btn) return;
+          const g = btn.getAttribute('data-rail-grade');
+          if (activePage === 'notes') notesGradeFilter = g;
+          else activeQuickTag = g;
+          renderAll();
+        });
+
+        $('mobileBottomNav').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-mnav]');
+          if (!btn) return;
+          const act = btn.getAttribute('data-mnav');
+          if (act === 'apps') switchPage('apps');
+          else if (act === 'notes') switchPage('notes');
+          else if (act === 'add') { openImportModal(); if (activePage === 'notes') switchImportTab('notes'); }
+          else if (act === 'classroom') {
+            applyClassroomMode(!classroomMode);
+            showToast(classroomMode ? '🎓 已開啟課堂模式' : '已退出課堂模式');
+          } else if (act === 'settings') {
+            loadSyncConfig();
+            $('settingsModal').classList.add('open');
+          }
+        });
+
+        $('pageTabApps').addEventListener('click', () => switchPage('apps'));
+        $('pageTabNotes').addEventListener('click', () => switchPage('notes'));
+        $('quickExcelBtn').addEventListener('click', () => {
+          loadSyncConfig();
+          $('settingsModal').classList.add('open');
+        });
+
+        // Excel CSV Import / Export
+        $('exportExcelBtn').addEventListener('click', exportExcelCsv);
+        $('downloadExcelTemplateBtn').addEventListener('click', downloadExcelTemplate);
+        $('importExcelBtn').addEventListener('click', () => $('excelImportInput').click());
+        $('excelImportInput').addEventListener('change', (e) => {
+          importExcelCsvFile(e.target.files[0]);
+          e.target.value = '';
+        });
+
+        // Notes Gallery Events
+        $('openAddNotesBtn').addEventListener('click', () => { openImportModal(); switchImportTab('notes'); });
+        $('notesEmptyAddBtn').addEventListener('click', () => { openImportModal(); switchImportTab('notes'); });
+        $('pickNoteImagesBtn').addEventListener('click', () => $('noteImagesPickerInput').click());
+        $('noteImagesPickerInput').addEventListener('change', (e) => handleNoteImageFiles(e.target.files));
+        $('confirmNotesBtn').addEventListener('click', commitNotesImport);
+
+        $('notesSearchInput').addEventListener('input', (e) => {
+          notesSearchQuery = e.target.value;
+          $('notesSearchClearBtn').classList.toggle('visible', notesSearchQuery.length > 0);
+          renderNotesPage();
+        });
+        $('notesSearchClearBtn').addEventListener('click', () => {
+          notesSearchQuery = '';
+          $('notesSearchInput').value = '';
+          $('notesSearchClearBtn').classList.remove('visible');
+          renderNotesPage();
+        });
+        $('notesGradeBar').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-ngrade]');
+          if (!btn) return;
+          notesGradeFilter = btn.getAttribute('data-ngrade');
+          renderNotesPage();
+        });
+        $('notesTopicBar').addEventListener('click', (e) => {
+          const btn = e.target.closest('[data-ntopic]');
+          if (!btn) return;
+          notesTopicFilter = btn.getAttribute('data-ntopic');
+          renderNotesPage();
+        });
+        $('notesEmptyResetBtn').addEventListener('click', () => {
+          notesSearchQuery = '';
+          $('notesSearchInput').value = '';
+          $('notesSearchClearBtn').classList.remove('visible');
+          notesGradeFilter = 'all';
+          notesTopicFilter = 'all';
+          renderNotesPage();
+        });
+        $('notesGrid').addEventListener('click', (e) => {
+          const act = e.target.closest('[data-note-action]');
+          if (act) {
+            e.stopPropagation();
+            const id = act.getAttribute('data-id');
+            if (act.getAttribute('data-note-action') === 'rename') openRenameModal(id);
+            else openEditModal(id);
+            return;
+          }
+          const card = e.target.closest('.note-card');
+          if (card) {
+            const nid = card.getAttribute('data-note-id');
+            if (!openInSplitPreview(nid)) openLightbox(nid);
+          }
+        });
+
+        // Lightbox Controls
+        $('closeLightboxBtn').addEventListener('click', closeLightbox);
+        $('zoomInBtn').addEventListener('click', () => applyLightboxZoom(lightboxZoom + 0.35));
+        $('zoomOutBtn').addEventListener('click', () => applyLightboxZoom(lightboxZoom - 0.35));
+        $('zoomResetBtn').addEventListener('click', () => applyLightboxZoom(1));
+        $('lightboxImg').addEventListener('click', () => applyLightboxZoom(lightboxZoom > 1.01 ? 1 : 2));
+        $('lightboxPrevBtn').addEventListener('click', () => {
+          lightboxIndex = (lightboxIndex - 1 + lightboxList.length) % lightboxList.length;
+          renderLightbox();
+        });
+        $('lightboxNextBtn').addEventListener('click', () => {
+          lightboxIndex = (lightboxIndex + 1) % lightboxList.length;
+          renderLightbox();
+        });
+        $('downloadNoteImgBtn').addEventListener('click', () => {
+          const n = lightboxList[lightboxIndex];
+          if (!n) return;
+          const src = n.content || normalizeImageUrl(n.url || n.path);
+          const a = document.createElement('a');
+          a.href = src;
+          a.download = n.filename || 'note.jpg';
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        });
+        window.addEventListener('keydown', (e) => {
+          if (!$('lightboxOverlay').classList.contains('open')) return;
+          if (e.key === 'Escape') closeLightbox();
+          else if (e.key === 'ArrowLeft' && lightboxList.length > 1) {
+            lightboxIndex = (lightboxIndex - 1 + lightboxList.length) % lightboxList.length;
+            renderLightbox();
+          } else if (e.key === 'ArrowRight' && lightboxList.length > 1) {
+            lightboxIndex = (lightboxIndex + 1) % lightboxList.length;
+            renderLightbox();
+          }
+        });
+
         $('classroomToggleBtn').addEventListener('click', () => {
           applyClassroomMode(!classroomMode);
           showToast(classroomMode ? '🎓 已開啟課堂模式（已隱藏私人遊戲）' : '已退出課堂模式');
@@ -3196,12 +5651,22 @@
             renderCards();
             return;
           }
+          const copyBadge = e.target.closest('[data-copy-text]');
+          if (copyBadge) {
+            e.stopPropagation();
+            copyText(copyBadge.getAttribute('data-copy-text'));
+            showToast('📋 已複製：' + copyBadge.getAttribute('data-copy-text'));
+            return;
+          }
           const btn = e.target.closest('[data-action]');
           if (btn) {
             e.stopPropagation();
             const action = btn.getAttribute('data-action');
             const id = btn.getAttribute('data-id');
-            if (action === 'rename') {
+            if (action === 'qr') {
+              const w = works.find((x) => x.id === id);
+              if (w) openQrModal(w.title, w.url || w.path);
+            } else if (action === 'rename') {
               openRenameModal(id);
             } else if (action === 'fav') {
               const w = works.find((x) => x.id === id);
@@ -3308,7 +5773,27 @@
           importBackupFile(e.target.files[0]);
           e.target.value = '';
         });
+        // v7.0 One-Tap Instant Two-Way Sync + Auto-Sync on App Resume / Online
+        $('headerSyncNowBtn').addEventListener('click', () => syncTwoWayNow(false));
+        $('stripSyncNowBtn').addEventListener('click', () => syncTwoWayNow(false));
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible' && autoSyncEnabled) syncTwoWayNow(true);
+        });
+        window.addEventListener('online', () => {
+          if (autoSyncEnabled) syncTwoWayNow(true);
+        });
+
         $('syncPushBtn').addEventListener('click', syncPushGist);
+        $('exportSyncIdBtn').addEventListener('click', exportSyncId);
+        $('openImportSyncIdBtn').addEventListener('click', () => {
+          $('importSyncIdTextarea').value = '';
+          $('syncIdModal').classList.add('open');
+          setTimeout(() => $('importSyncIdTextarea').focus(), 50);
+        });
+        $('closeSyncIdModalBtn').addEventListener('click', () => $('syncIdModal').classList.remove('open'));
+        $('cancelSyncIdModalBtn').addEventListener('click', () => $('syncIdModal').classList.remove('open'));
+        $('confirmImportSyncIdBtn').addEventListener('click', confirmImportSyncId);
+
         $('syncPullBtn').addEventListener('click', syncPullGist);
 
         $('restoreDemoBtn').addEventListener('click', async () => {
@@ -3364,7 +5849,7 @@
           if (e.key === 'Enter') { e.preventDefault(); saveQuickRename(); }
         });
 
-        ['importModal', 'folderModal', 'editModal', 'renameModal', 'confirmModal', 'settingsModal'].forEach((id) => {
+        ['importModal', 'folderModal', 'editModal', 'renameModal', 'confirmModal', 'settingsModal', 'playlistModal', 'qrModal', 'syncIdModal'].forEach((id) => {
           $(id).addEventListener('click', (e) => { if (e.target === $(id)) $(id).classList.remove('open'); });
         });
 
@@ -3420,12 +5905,25 @@
             for (const d of works) await dbPut(STORE_WORKS, d);
           }
         }
+        try {
+          if (localStorage.getItem('ai_hub_dirty') === '1') $('unsyncedDot').classList.add('visible');
+          const savedSplit = localStorage.getItem('ai_hub_split');
+          if (savedSplit === '1') applySplitMode(true);
+        } catch (e) {}
+        try {
+          const asVal = localStorage.getItem('ai_hub_autosync');
+          autoSyncEnabled = asVal === null ? true : asVal === '1';
+          $('autoSyncCheck').checked = autoSyncEnabled;
+        } catch (e) {}
+        loadPlaylists();
         applyClassroomMode(savedClass);
+        refreshSyncBannerFromStorage();
+        if (autoSyncEnabled) syncTwoWayNow(true);
       }
 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('./sw.js').catch(() => {});
+          navigator.serviceWorker.register('./sw.js').then((reg) => { reg.update().catch(() => {}); }).catch(() => {});
         });
       }
       init();

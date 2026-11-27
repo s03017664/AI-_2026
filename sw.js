@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ai-works-hub-v5';
+const CACHE_NAME = 'ai-works-hub-v13-netfirst';
 const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (e) => {
@@ -15,10 +15,19 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
+// Network-First: always fetch latest version when online; seamlessly fall back to offline cache when offline
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
   if (e.request.url.includes('api.github.com')) return;
   e.respondWith(
-    caches.match(e.request).then((cached) => cached || fetch(e.request).catch(() => caches.match('./index.html')))
+    fetch(e.request, { cache: 'no-cache' })
+      .then((res) => {
+        if (res && res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((c) => c.put(e.request, copy)).catch(() => {});
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request).then((cached) => cached || caches.match('./index.html')))
   );
 });
